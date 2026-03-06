@@ -42,18 +42,27 @@
   /* PAGE PROJECTION */
   #page-projection { flex-direction:column; background:var(--noir); }
   .proj-header {
-    display:flex; align-items:center; justify-content:center;
-    padding:14px 24px 8px; gap:16px; flex-shrink:0; flex-wrap:wrap;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 20px 6px; gap:12px; flex-shrink:0; flex-wrap:wrap;
   }
   .proj-title {
     font-family:'Bebas Neue',sans-serif; font-size:2.2rem;
     letter-spacing:6px; color:var(--or); text-shadow:0 0 30px rgba(255,215,0,0.4);
   }
   .manche-badge {
-    font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:700;
-    letter-spacing:3px; text-transform:uppercase; color:#555;
-    background:#111; padding:4px 14px; border-radius:20px; border:1px solid #333;
+    font-family:'Bebas Neue',sans-serif; font-size:1.5rem; font-weight:400;
+    letter-spacing:4px; text-transform:uppercase; color:var(--blanc);
+    background:#1a1a1a; padding:6px 20px; border-radius:8px;
+    border:2px solid rgba(255,255,255,0.15);
+    text-shadow:0 0 20px rgba(255,255,255,0.2);
   }
+  .manche-nav { display:flex; align-items:center; gap:6px; }
+  .manche-nav-btn {
+    width:34px; height:34px; border-radius:6px; border:1px solid #333;
+    background:#111; color:#888; font-size:1rem; cursor:pointer;
+    transition:all 0.15s; display:flex; align-items:center; justify-content:center;
+  }
+  .manche-nav-btn:hover { background:#222; color:var(--or); border-color:var(--or); }
   #syncStatus {
     font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; font-weight:700;
     letter-spacing:2px; color:#E8003A; padding:3px 10px;
@@ -101,22 +110,28 @@
   .c7 .team-name{color:#8888ff} .c7 .team-score{color:#3F51B5;text-shadow:0 0 60px rgba(63,81,181,.5)}
 
   /* VS / Divider */
-  .vs-divider { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 10px; gap:8px; }
+  .vs-divider { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 10px; gap:6px; }
   .vs-line { width:1px; flex:1; background:linear-gradient(to bottom,transparent,#333,transparent); }
-  .vs-text { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; color:#333; letter-spacing:2px; }
+  .vs-text { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; color:#333; letter-spacing:2px; }
 
-  /* Sablier */
-  .sablier-ring { position:relative; width:90px; height:90px; }
-  .sablier-ring svg { width:90px; height:90px; transform:rotate(-90deg); }
+  /* Sablier — 2x plus grand */
+  .sablier-ring { position:relative; width:180px; height:180px; }
+  .sablier-ring svg { width:180px; height:180px; transform:rotate(-90deg); }
   .ring-bg { fill:none; stroke:#222; stroke-width:8; }
   .ring-progress { fill:none; stroke:var(--or); stroke-width:8; stroke-linecap:round; stroke-dasharray:314; stroke-dashoffset:0; transition:stroke-dashoffset 1s linear,stroke 0.3s; }
   .ring-progress.urgent { stroke:var(--rouge); }
-  .timer-display { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Bebas Neue',sans-serif; font-size:1.9rem; color:var(--blanc); letter-spacing:2px; }
+  .timer-display { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Bebas Neue',sans-serif; font-size:3.8rem; color:var(--blanc); letter-spacing:2px; }
   .timer-display.urgent { color:var(--rouge); }
   .timer-controls { display:flex; gap:6px; align-items:center; }
-  .t-btn { width:40px; height:40px; border-radius:50%; border:2px solid #333; background:#111; color:var(--blanc); font-size:1rem; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; }
+  .t-btn { width:44px; height:44px; border-radius:50%; border:2px solid #333; background:#111; color:var(--blanc); font-size:1.1rem; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; }
   .t-btn:hover { background:#222; border-color:#555; }
   .t-btn.play { background:var(--vert); border-color:var(--vert); color:#000; }
+
+  /* Cadres équipes compacts pour laisser place au sablier */
+  .team-block { padding:8px 12px !important; }
+  .team-name { font-size:clamp(0.85rem,2vw,1.6rem) !important; margin-bottom:2px !important; }
+  .team-score { font-size:clamp(1.8rem,5.5vw,5rem) !important; }
+  .team-pts-label { font-size:0.65rem !important; margin-top:1px !important; }
 
   /* Flash */
   .flash-overlay { position:fixed; inset:0; background:rgba(232,0,58,.35); pointer-events:none; opacity:0; transition:opacity 0.1s; z-index:999; }
@@ -135,7 +150,7 @@
   .btn-continuer:hover { transform:scale(1.04); }
 
   /* Proj controls */
-  .proj-controls { flex-shrink:0; padding:8px 16px 12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; border-top:1px solid #1a1a1a; }
+  .proj-controls { display:none; }
   .ctrl-btn { padding:9px 16px; border:1px solid #333; background:#111; color:var(--blanc); font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; cursor:pointer; border-radius:6px; transition:all 0.2s; }
   .ctrl-btn:hover { background:#222; border-color:#555; }
   .ctrl-btn.primary { background:var(--or); color:#000; border-color:var(--or); }
@@ -219,17 +234,19 @@
 <!-- PROJECTION -->
 <div class="page active" id="page-projection">
   <div class="proj-header">
+    <div class="manche-nav">
+      <button class="manche-nav-btn" onclick="changerManche(-1)" title="Manche précédente">◀</button>
+      <div class="manche-badge" id="mancheBadge">MANCHE 1 — TOUT PERMIS</div>
+      <button class="manche-nav-btn" onclick="changerManche(1)" title="Manche suivante">▶</button>
+    </div>
     <div class="proj-title">TIMES UP</div>
-    <div class="manche-badge" id="mancheBadge">MANCHE 1 — TOUT PERMIS</div>
-    <div id="syncStatus">● CONNEXION...</div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div id="syncStatus">● CONNEXION...</div>
+      <button class="ctrl-btn primary" onclick="afficherRecap()" style="padding:5px 12px;font-size:0.75rem;">📊 Récap</button>
+      <button class="ctrl-btn danger" onclick="resetComplet()" style="padding:5px 12px;font-size:0.75rem;">⚠ Reset</button>
+    </div>
   </div>
   <div class="scores-zone" id="scoresZone"></div>
-  <div class="proj-controls">
-    <button class="ctrl-btn" onclick="changerManche(-1)">◀ Manche</button>
-    <button class="ctrl-btn" onclick="changerManche(1)">Manche ▶</button>
-    <button class="ctrl-btn primary" onclick="afficherRecap()">📊 Récap</button>
-    <button class="ctrl-btn danger" onclick="resetComplet()">⚠ Reset total</button>
-  </div>
 </div>
 
 <!-- SCOREURS -->
@@ -563,10 +580,9 @@ function renderScoreurs(){
     <div class="scoreur-panel" style="background:linear-gradient(160deg,${TC[i%8]}11,${TC[i%8]}22);border:2px solid ${TC[i%8]}55">
       <div class="scoreur-team-name" id="scoreurNom${i}" style="color:${TCL[i%8]}">${nom}</div>
       <div class="scoreur-score-display" id="scoreurScore${i}" style="color:${TC[i%8]}">${state.scores[i]}</div>
-      <div class="scoreur-btns">
-        <button class="score-add-btn" onclick="addScore(${i},1)" style="background:${TC[i%8]}">+1</button>
-        <button class="score-add-btn" onclick="addScore(${i},2)" style="background:${TC[i%8]}">+2</button>
-        <button class="score-minus-btn" onclick="addScore(${i},-1)">−1 (annuler)</button>
+      <div class="scoreur-btns" style="grid-template-columns:1fr">
+        <button class="score-add-btn" id="addBtn${i}" onclick="addScore(${i}, state.manche===2 ? 2 : 1)" style="background:${TC[i%8]};grid-column:1/-1">${state.manche===2 ? 'SCORE ×2' : '+1'}</button>
+        <button class="score-minus-btn" id="minusBtn${i}" onclick="addScore(${i}, state.manche===2 ? -2 : -1)">−${state.manche===2 ? 2 : 1} (annuler)</button>
       </div>
     </div>`).join('');
 }
@@ -599,6 +615,13 @@ function render(){
     if(sn) sn.textContent=state.noms[i];
     if(ss) ss.textContent=state.scores[i];
   }
+  // Mettre à jour les labels des boutons scoreurs selon la manche
+  for(let i=0;i<state.nbEquipes;i++){
+    const btn=document.getElementById(`addBtn${i}`);
+    if(btn) btn.textContent = state.manche===2 ? 'SCORE ×2' : '+1';
+    const mb=document.getElementById(`minusBtn${i}`);
+    if(mb) mb.textContent = (state.manche===2 ? '−2' : '−1') + ' (annuler)';
+  }
 }
 
 function renderAll(){ renderProjection(); renderScoreurs(); renderReglages(); }
@@ -609,6 +632,14 @@ updateTimerUI();
 demanderEtat();
 document.addEventListener('click',()=>{try{getAudio().resume();}catch(e){}},{once:true});
 document.addEventListener('touchstart',()=>{try{getAudio().resume();}catch(e){}},{once:true});
+
+// Raccourci clavier P = play/pause timer
+document.addEventListener('keydown',(e)=>{
+  if(e.code==='KeyP' && !e.target.matches('input,textarea,select')){
+    e.preventDefault();
+    toggleTimer();
+  }
+});
 </script>
 </body>
 </html>
