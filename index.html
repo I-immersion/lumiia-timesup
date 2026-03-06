@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0051)file:///Users/emmanuelexbrayat/Downloads/index.html -->
-<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Times Up – LUMIIA</title>
-<link href="./index_files/css2" rel="stylesheet">
-<script src="./index_files/ably.min-2.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
   :root {
     --rouge: #E8003A; --bleu: #0066FF; --or: #FFD700;
@@ -210,85 +211,19 @@
 </div>
 
 <nav id="tab-nav">
-  <button class="tab-btn" onclick="showTab(&#39;projection&#39;,event)">🎬 Projection</button>
-  <button class="tab-btn active" onclick="showTab(&#39;scoreurs&#39;,event)">✏️ Scoreurs</button>
-  <button class="tab-btn" onclick="showTab(&#39;reglages&#39;,event)">⚙️ Réglages</button>
+  <button class="tab-btn active" onclick="showTab('projection',event)">🎬 Projection</button>
+  <button class="tab-btn" onclick="showTab('scoreurs',event)">✏️ Scoreurs</button>
+  <button class="tab-btn" onclick="showTab('reglages',event)">⚙️ Réglages</button>
 </nav>
 
 <!-- PROJECTION -->
-<div class="page" id="page-projection">
+<div class="page active" id="page-projection">
   <div class="proj-header">
     <div class="proj-title">TIMES UP</div>
     <div class="manche-badge" id="mancheBadge">MANCHE 1 — TOUT PERMIS</div>
-    <div id="syncStatus" style="color: rgb(0, 200, 83);">● EN LIGNE</div>
+    <div id="syncStatus">● CONNEXION...</div>
   </div>
-  <div class="scores-zone" id="scoresZone">
-    <div class="match-row">
-      <div class="team-block c0">
-        <div class="team-name" id="projNom0">ÉQUIPE ROUGE 1</div>
-        <div class="team-score" id="projScore0">2</div>
-        <div class="team-pts-label">points</div>
-      </div>
-      <div class="vs-divider">
-        <div class="vs-line"></div>
-        
-        <div class="sablier-ring">
-          <svg viewBox="0 0 120 120">
-            <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
-            <circle class="ring-progress" id="ringProgress" cx="60" cy="60" r="50" style="stroke-dashoffset: 0;"></circle>
-          </svg>
-          <div class="timer-display" id="timerDisplay">45</div>
-        </div>
-        <div class="timer-controls">
-          <button class="t-btn play" id="playBtn" onclick="toggleTimer()">▶</button>
-          <button class="t-btn" onclick="resetTimer()">↺</button>
-        </div>
-        
-        <div class="vs-text">VS</div>
-        <div class="vs-line"></div>
-      </div>
-      <div class="team-block c1">
-        <div class="team-name" id="projNom1">ÉQUIPE BLEUE 4</div>
-        <div class="team-score" id="projScore1">0</div>
-        <div class="team-pts-label">points</div>
-      </div>
-    </div>
-    <div class="match-row">
-      <div class="team-block c2">
-        <div class="team-name" id="projNom2">ÉQUIPE VERTE 2</div>
-        <div class="team-score" id="projScore2">0</div>
-        <div class="team-pts-label">points</div>
-      </div>
-      <div class="vs-divider">
-        <div class="vs-line"></div>
-        
-        <div class="vs-text">VS</div>
-        <div class="vs-line"></div>
-      </div>
-      <div class="team-block c3">
-        <div class="team-name" id="projNom3">ÉQUIPE ORANGE 5</div>
-        <div class="team-score" id="projScore3">0</div>
-        <div class="team-pts-label">points</div>
-      </div>
-    </div>
-    <div class="match-row">
-      <div class="team-block c4">
-        <div class="team-name" id="projNom4">ÉQUIPE VIOLET 3</div>
-        <div class="team-score" id="projScore4">0</div>
-        <div class="team-pts-label">points</div>
-      </div>
-      <div class="vs-divider">
-        <div class="vs-line"></div>
-        
-        <div class="vs-text">VS</div>
-        <div class="vs-line"></div>
-      </div>
-      <div class="team-block c5">
-        <div class="team-name" id="projNom5">ÉQUIPE CYAN 6</div>
-        <div class="team-score" id="projScore5">0</div>
-        <div class="team-pts-label">points</div>
-      </div>
-    </div></div>
+  <div class="scores-zone" id="scoresZone"></div>
   <div class="proj-controls">
     <button class="ctrl-btn" onclick="changerManche(-1)">◀ Manche</button>
     <button class="ctrl-btn" onclick="changerManche(1)">Manche ▶</button>
@@ -298,62 +233,8 @@
 </div>
 
 <!-- SCOREURS -->
-<div class="page active" id="page-scoreurs">
-  <div class="scoreurs-grid" id="scoreursGrid">
-    <div class="scoreur-panel" style="background:linear-gradient(160deg,#E8003A11,#E8003A22);border:2px solid #E8003A55">
-      <div class="scoreur-team-name" id="scoreurNom0" style="color:#ff4d7a">ÉQUIPE ROUGE 1</div>
-      <div class="scoreur-score-display" id="scoreurScore0" style="color:#E8003A">2</div>
-      <div class="scoreur-btns">
-        <button class="score-add-btn" onclick="addScore(0,1)" style="background:#E8003A">+1</button>
-        <button class="score-add-btn" onclick="addScore(0,2)" style="background:#E8003A">+2</button>
-        <button class="score-minus-btn" onclick="addScore(0,-1)">−1 (annuler)</button>
-      </div>
-    </div>
-    <div class="scoreur-panel" style="background:linear-gradient(160deg,#0066FF11,#0066FF22);border:2px solid #0066FF55">
-      <div class="scoreur-team-name" id="scoreurNom1" style="color:#4d9fff">ÉQUIPE BLEUE 4</div>
-      <div class="scoreur-score-display" id="scoreurScore1" style="color:#0066FF">0</div>
-      <div class="scoreur-btns">
-        <button class="score-add-btn" onclick="addScore(1,1)" style="background:#0066FF">+1</button>
-        <button class="score-add-btn" onclick="addScore(1,2)" style="background:#0066FF">+2</button>
-        <button class="score-minus-btn" onclick="addScore(1,-1)">−1 (annuler)</button>
-      </div>
-    </div>
-    <div class="scoreur-panel" style="background:linear-gradient(160deg,#00C85311,#00C85322);border:2px solid #00C85355">
-      <div class="scoreur-team-name" id="scoreurNom2" style="color:#66ff99">ÉQUIPE VERTE 2</div>
-      <div class="scoreur-score-display" id="scoreurScore2" style="color:#00C853">0</div>
-      <div class="scoreur-btns">
-        <button class="score-add-btn" onclick="addScore(2,1)" style="background:#00C853">+1</button>
-        <button class="score-add-btn" onclick="addScore(2,2)" style="background:#00C853">+2</button>
-        <button class="score-minus-btn" onclick="addScore(2,-1)">−1 (annuler)</button>
-      </div>
-    </div>
-    <div class="scoreur-panel" style="background:linear-gradient(160deg,#FF980011,#FF980022);border:2px solid #FF980055">
-      <div class="scoreur-team-name" id="scoreurNom3" style="color:#ffcc66">ÉQUIPE ORANGE 5</div>
-      <div class="scoreur-score-display" id="scoreurScore3" style="color:#FF9800">0</div>
-      <div class="scoreur-btns">
-        <button class="score-add-btn" onclick="addScore(3,1)" style="background:#FF9800">+1</button>
-        <button class="score-add-btn" onclick="addScore(3,2)" style="background:#FF9800">+2</button>
-        <button class="score-minus-btn" onclick="addScore(3,-1)">−1 (annuler)</button>
-      </div>
-    </div>
-    <div class="scoreur-panel" style="background:linear-gradient(160deg,#9C27B011,#9C27B022);border:2px solid #9C27B055">
-      <div class="scoreur-team-name" id="scoreurNom4" style="color:#cc88ff">ÉQUIPE VIOLET 3</div>
-      <div class="scoreur-score-display" id="scoreurScore4" style="color:#9C27B0">0</div>
-      <div class="scoreur-btns">
-        <button class="score-add-btn" onclick="addScore(4,1)" style="background:#9C27B0">+1</button>
-        <button class="score-add-btn" onclick="addScore(4,2)" style="background:#9C27B0">+2</button>
-        <button class="score-minus-btn" onclick="addScore(4,-1)">−1 (annuler)</button>
-      </div>
-    </div>
-    <div class="scoreur-panel" style="background:linear-gradient(160deg,#00BCD411,#00BCD422);border:2px solid #00BCD455">
-      <div class="scoreur-team-name" id="scoreurNom5" style="color:#66ddee">ÉQUIPE CYAN 6</div>
-      <div class="scoreur-score-display" id="scoreurScore5" style="color:#00BCD4">0</div>
-      <div class="scoreur-btns">
-        <button class="score-add-btn" onclick="addScore(5,1)" style="background:#00BCD4">+1</button>
-        <button class="score-add-btn" onclick="addScore(5,2)" style="background:#00BCD4">+2</button>
-        <button class="score-minus-btn" onclick="addScore(5,-1)">−1 (annuler)</button>
-      </div>
-    </div></div>
+<div class="page" id="page-scoreurs">
+  <div class="scoreurs-grid" id="scoreursGrid"></div>
   <div class="scoreurs-bottom">
     <div class="manche-selector">
       <label>Manche :</label>
@@ -394,7 +275,7 @@
       <div class="spinner-label">Équipes en jeu</div>
       <div class="spinner-ctrl">
         <button class="spin-btn" onclick="changeNbEquipes(-2)">−</button>
-        <div class="spin-val" id="spinEquipes">6</div>
+        <div class="spin-val" id="spinEquipes">2</div>
         <button class="spin-btn" onclick="changeNbEquipes(2)">+</button>
       </div>
     </div>
@@ -403,31 +284,7 @@
 
   <div class="regl-section">
     <div class="regl-title">✏️ Noms des équipes</div>
-    <div class="teams-names-grid" id="teamsNamesGrid">
-    <div class="team-name-row">
-      <div class="team-name-label" style="color:#E8003A88">Équipe 1</div>
-      <input class="team-name-input" id="inputNom0" type="text" value="ÉQUIPE ROUGE" maxlength="20" style="border-color: rgba(232, 0, 58, 0.2);" onfocus="this.style.borderColor=&#39;#E8003A&#39;" onblur="this.style.borderColor=&#39;#E8003A33&#39;">
-    </div>
-    <div class="team-name-row">
-      <div class="team-name-label" style="color:#0066FF88">Équipe 2</div>
-      <input class="team-name-input" id="inputNom1" type="text" value="ÉQUIPE BLEUE" maxlength="20" style="border-color: rgba(0, 102, 255, 0.2);" onfocus="this.style.borderColor=&#39;#0066FF&#39;" onblur="this.style.borderColor=&#39;#0066FF33&#39;">
-    </div>
-    <div class="team-name-row">
-      <div class="team-name-label" style="color:#00C85388">Équipe 3</div>
-      <input class="team-name-input" id="inputNom2" type="text" value="ÉQUIPE VERTE" maxlength="20" style="border-color: rgba(0, 200, 83, 0.2);" onfocus="this.style.borderColor=&#39;#00C853&#39;" onblur="this.style.borderColor=&#39;#00C85333&#39;">
-    </div>
-    <div class="team-name-row">
-      <div class="team-name-label" style="color:#FF980088">Équipe 4</div>
-      <input class="team-name-input" id="inputNom3" type="text" value="ÉQUIPE ORANGE" maxlength="20" style="border-color: rgba(255, 152, 0, 0.2);" onfocus="this.style.borderColor=&#39;#FF9800&#39;" onblur="this.style.borderColor=&#39;#FF980033&#39;">
-    </div>
-    <div class="team-name-row">
-      <div class="team-name-label" style="color:#9C27B088">Équipe 5</div>
-      <input class="team-name-input" id="inputNom4" type="text" value="ÉQUIPE VIOLET" maxlength="20" style="border-color: rgba(156, 39, 176, 0.2);" onfocus="this.style.borderColor=&#39;#9C27B0&#39;" onblur="this.style.borderColor=&#39;#9C27B033&#39;">
-    </div>
-    <div class="team-name-row">
-      <div class="team-name-label" style="color:#00BCD488">Équipe 6</div>
-      <input class="team-name-input" id="inputNom5" type="text" value="ÉQUIPE CYAN" maxlength="20" style="border-color: rgba(0, 188, 212, 0.2);" onfocus="this.style.borderColor=&#39;#00BCD4&#39;" onblur="this.style.borderColor=&#39;#00BCD433&#39;">
-    </div></div>
+    <div class="teams-names-grid" id="teamsNamesGrid"></div>
     <button class="apply-btn-full" onclick="appliquerNoms()">APPLIQUER LES NOMS</button>
   </div>
 
@@ -447,7 +304,7 @@
   <div class="regl-section">
     <div class="regl-title">📡 Synchronisation réseau</div>
     <div class="sync-row">
-      <div id="syncStatusRegl" style="font-family: &quot;Barlow Condensed&quot;, sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 2px; color: rgb(0, 200, 83);">● EN LIGNE</div>
+      <div id="syncStatusRegl" style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:2px;color:#555;">● CONNEXION...</div>
       <button class="ctrl-btn" onclick="demanderEtat()" style="font-size:0.78rem;padding:7px 12px;">🔄 Resynchroniser</button>
     </div>
     <div class="sync-info">
@@ -474,49 +331,67 @@ let state = {
 };
 let timerInterval = null;
 
-// ===== SYNC =====
-const CHANNEL_NAME = 'lumiia-timesup-2026';
-const clientId = Math.random().toString(36).slice(2,9);
-let ablyChannel = null;
-let bc = null;
+// ===== FIREBASE SYNC =====
+const firebaseConfig = {
+  apiKey: "AIzaSyBPgjVFKrP80qX_hlfUFqL168XONfNIBA4",
+  authDomain: "lumiia-live.firebaseapp.com",
+  databaseURL: "https://lumiia-live-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "lumiia-live",
+  storageBucket: "lumiia-live.firebasestorage.app",
+  messagingSenderId: "823919513931",
+  appId: "1:823919513931:web:6f6f3c7c6d1699457b18ce"
+};
 
-// BroadcastChannel (même navigateur, même machine)
+const clientId = Math.random().toString(36).slice(2,9);
+let db = null;
+let dbRef = null;
+let isUpdatingFromRemote = false;
+
 try {
-  bc = new BroadcastChannel(CHANNEL_NAME);
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+  dbRef = db.ref('timesup/state');
+
+  // Écoute les changements en temps réel
+  dbRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (!data || data.from === clientId) return;
+    isUpdatingFromRemote = true;
+    handleMsg(data);
+    isUpdatingFromRemote = false;
+  });
+
+  // Connexion OK
+  db.ref('.info/connected').on('value', (snap) => {
+    setSyncStatus(snap.val() ? 'connected' : 'disconnected');
+  });
+} catch(e) {
+  setSyncStatus('disconnected');
+}
+
+// BroadcastChannel en bonus (même navigateur)
+let bc = null;
+try {
+  bc = new BroadcastChannel('lumiia-timesup');
   bc.onmessage = e => { if(e.data.from!==clientId) handleMsg(e.data); };
 } catch(e){}
-
-// Ably (multi-appareils, même WiFi)
-try {
-  const ably = new Ably.Realtime({
-    key: 'xVLyHw.Kg9tVQ:gzD8VcHklnNR-IhVH4HkWMrqXkj5-q9GnmPP6sGx3YY',
-    clientId
-  });
-  ablyChannel = ably.channels.get(CHANNEL_NAME);
-  ablyChannel.subscribe(msg => {
-    if(msg.data.from!==clientId) handleMsg(msg.data);
-  });
-  ably.connection.on('connected', () => { setSyncStatus('connected'); demanderEtat(); });
-  ably.connection.on('disconnected', () => { if(!bc) setSyncStatus('disconnected'); });
-  ably.connection.on('failed', () => { if(!bc) setSyncStatus('disconnected'); });
-} catch(e){ if(!bc) setSyncStatus('disconnected'); }
-
-if(bc) setSyncStatus('connected');
 
 function broadcast(type='state'){
   const p = {
     type, from:clientId,
     scores:state.scores, noms:state.noms, nbEquipes:state.nbEquipes,
-    manche:state.manche, timerDuree:state.timerDuree, passes:state.passes
+    manche:state.manche, timerDuree:state.timerDuree, passes:state.passes,
+    ts: Date.now()
   };
+  // Firebase (multi-appareils)
+  if(dbRef) dbRef.set(p).catch(()=>{});
+  // BroadcastChannel (même navigateur, instantané)
   if(bc) bc.postMessage(p);
-  if(ablyChannel) ablyChannel.publish('sync',p);
 }
 
 function demanderEtat(){
-  const p = {type:'request_state',from:clientId};
-  if(bc) bc.postMessage(p);
-  if(ablyChannel) ablyChannel.publish('sync',p);
+  // Firebase envoie l'état au chargement via le listener .on('value')
+  // Pas besoin de request_state séparé
 }
 
 function handleMsg(msg){
@@ -735,6 +610,5 @@ demanderEtat();
 document.addEventListener('click',()=>{try{getAudio().resume();}catch(e){}},{once:true});
 document.addEventListener('touchstart',()=>{try{getAudio().resume();}catch(e){}},{once:true});
 </script>
-
-
-</body></html>
+</body>
+</html>
