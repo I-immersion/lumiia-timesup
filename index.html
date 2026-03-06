@@ -1,699 +1,294 @@
 <!DOCTYPE html>
-<!-- saved from url=(0045)https://i-immersion.github.io/lumiia-timesup/ -->
-<html lang="fr" data-google-analytics-opt-out=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- saved from url=(0051)file:///Users/emmanuelexbrayat/Downloads/index.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Times Up – LUMIIA</title>
 <link href="./index_files/css2" rel="stylesheet">
+<script src="./index_files/ably.min-2.js"></script>
 <style>
   :root {
-    --rouge: #E8003A;
-    --bleu: #0066FF;
-    --or: #FFD700;
-    --noir: #0A0A0A;
-    --gris: #1A1A1A;
-    --gris2: #2A2A2A;
-    --blanc: #F5F5F5;
-    --vert: #00C853;
+    --rouge: #E8003A; --bleu: #0066FF; --or: #FFD700;
+    --noir: #0A0A0A; --gris: #1A1A1A; --gris2: #2A2A2A;
+    --blanc: #F5F5F5; --vert: #00C853;
   }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
+  * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    background: var(--noir);
-    color: var(--blanc);
-    font-family: 'Barlow', sans-serif;
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
+    background:var(--noir); color:var(--blanc);
+    font-family:'Barlow',sans-serif;
+    overflow:hidden; height:100vh; width:100vw;
   }
 
-  /* ========== TABS NAV ========== */
+  /* TABS */
   #tab-nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    display: flex;
-    z-index: 100;
-    background: #000;
-    border-bottom: 2px solid #222;
+    position:fixed; top:0; left:0; right:0;
+    display:flex; z-index:100; background:#000; border-bottom:2px solid #222;
   }
-
   .tab-btn {
-    flex: 1;
-    padding: 14px;
-    background: #111;
-    border: none;
-    color: #555;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-right: 1px solid #222;
+    flex:1; padding:14px; background:#111; border:none; color:#555;
+    font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:700;
+    letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:all 0.2s;
+    border-right:1px solid #222;
   }
-  .tab-btn:last-child { border-right: none; }
-  .tab-btn.active {
-    background: var(--gris2);
-    color: var(--or);
-    border-bottom: 3px solid var(--or);
-  }
-  .tab-btn:hover:not(.active) { background: #1a1a1a; color: #aaa; }
+  .tab-btn:last-child { border-right:none; }
+  .tab-btn.active { background:var(--gris2); color:var(--or); border-bottom:3px solid var(--or); }
+  .tab-btn:hover:not(.active) { background:#1a1a1a; color:#aaa; }
 
-  /* ========== PAGES ========== */
-  .page {
-    display: none;
-    position: absolute;
-    top: 52px; left: 0; right: 0; bottom: 0;
-    overflow-y: auto;
-  }
-  .page.active { display: flex; }
+  /* PAGES */
+  .page { display:none; position:absolute; top:52px; left:0; right:0; bottom:0; overflow-y:auto; }
+  .page.active { display:flex; }
 
-  /* ========== PAGE PROJECTION (double équipe) ========== */
-  #page-projection {
-    flex-direction: column;
-    background: var(--noir);
-  }
-
-  /* Header projection */
+  /* PAGE PROJECTION */
+  #page-projection { flex-direction:column; background:var(--noir); }
   .proj-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 24px 8px;
-    gap: 20px;
-    flex-shrink: 0;
+    display:flex; align-items:center; justify-content:center;
+    padding:14px 24px 8px; gap:16px; flex-shrink:0; flex-wrap:wrap;
   }
-
-  .proj-logo {
-    height: 48px;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
-  }
-
   .proj-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.4rem;
-    letter-spacing: 6px;
-    color: var(--or);
-    text-shadow: 0 0 30px rgba(255,215,0,0.4);
+    font-family:'Bebas Neue',sans-serif; font-size:2.2rem;
+    letter-spacing:6px; color:var(--or); text-shadow:0 0 30px rgba(255,215,0,0.4);
   }
-
   .manche-badge {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #555;
-    background: #111;
-    padding: 4px 14px;
-    border-radius: 20px;
-    border: 1px solid #333;
+    font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:700;
+    letter-spacing:3px; text-transform:uppercase; color:#555;
+    background:#111; padding:4px 14px; border-radius:20px; border:1px solid #333;
+  }
+  #syncStatus {
+    font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; font-weight:700;
+    letter-spacing:2px; color:#E8003A; padding:3px 10px;
+    background:#0a0a0a; border-radius:20px; border:1px solid #1a1a1a;
   }
 
-  /* Zone scores double */
-  .scores-double {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    flex: 1;
-    gap: 0;
-    padding: 12px 20px 20px;
-    min-height: 0;
-  }
-
+  /* SCORES ZONE */
+  .scores-zone { flex:1; padding:10px 16px 16px; min-height:0; display:flex; flex-direction:column; gap:8px; }
+  .match-row { display:grid; grid-template-columns:1fr auto 1fr; flex:1; gap:0; min-height:0; }
   .team-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 24px;
-    border-radius: 16px;
-    position: relative;
-    overflow: hidden;
-    min-height: 0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:14px 18px; border-radius:14px; position:relative; overflow:hidden; min-height:0;
   }
-
-  .team-block.equipe-a {
-    background: linear-gradient(135deg, #1a0010 0%, #2d0020 50%, #1a0010 100%);
-    border: 2px solid rgba(232,0,58,0.4);
-    box-shadow: 0 0 40px rgba(232,0,58,0.15), inset 0 0 60px rgba(232,0,58,0.05);
-  }
-
-  .team-block.equipe-b {
-    background: linear-gradient(135deg, #001020 0%, #001e3d 50%, #001020 100%);
-    border: 2px solid rgba(0,102,255,0.4);
-    box-shadow: 0 0 40px rgba(0,102,255,0.15), inset 0 0 60px rgba(0,102,255,0.05);
-  }
-
-  .team-block::before {
-    content: '';
-    position: absolute;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
   .team-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(1.6rem, 3.5vw, 3rem);
-    letter-spacing: 4px;
-    text-align: center;
-    margin-bottom: 8px;
-    line-height: 1;
+    font-family:'Bebas Neue',sans-serif; font-size:clamp(1.1rem,3vw,2.4rem);
+    letter-spacing:4px; text-align:center; margin-bottom:4px; line-height:1;
   }
-
-  .equipe-a .team-name { color: #ff4d7a; }
-  .equipe-b .team-name { color: #4d9fff; }
-
   .team-score {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(5rem, 14vw, 12rem);
-    line-height: 0.9;
-    text-align: center;
-    transition: transform 0.15s ease, color 0.3s;
+    font-family:'Bebas Neue',sans-serif; font-size:clamp(3rem,10vw,9rem);
+    line-height:0.9; text-align:center; transition:transform 0.15s;
   }
-
-  .equipe-a .team-score { color: var(--rouge); text-shadow: 0 0 60px rgba(232,0,58,0.5); }
-  .equipe-b .team-score { color: var(--bleu); text-shadow: 0 0 60px rgba(0,102,255,0.5); }
-
-  .team-score.bump {
-    animation: scoreBump 0.4s ease;
-  }
-  @keyframes scoreBump {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-  }
-
+  .team-score.bump { animation:scoreBump 0.4s ease; }
+  @keyframes scoreBump { 0%{transform:scale(1)} 40%{transform:scale(1.2)} 100%{transform:scale(1)} }
   .team-pts-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    opacity: 0.5;
-    margin-top: 4px;
+    font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; font-weight:600;
+    letter-spacing:4px; text-transform:uppercase; opacity:0.35; margin-top:4px;
   }
 
-  /* Séparateur central */
-  .vs-divider {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0 16px;
-    gap: 16px;
-  }
+  /* Couleurs équipes */
+  .c0{background:linear-gradient(135deg,#1a0010,#2d0020);border:2px solid rgba(232,0,58,.4)}
+  .c0 .team-name{color:#ff4d7a} .c0 .team-score{color:#E8003A;text-shadow:0 0 60px rgba(232,0,58,.5)}
+  .c1{background:linear-gradient(135deg,#001020,#001e3d);border:2px solid rgba(0,102,255,.4)}
+  .c1 .team-name{color:#4d9fff} .c1 .team-score{color:#0066FF;text-shadow:0 0 60px rgba(0,102,255,.5)}
+  .c2{background:linear-gradient(135deg,#0a1a00,#1a3300);border:2px solid rgba(0,200,83,.4)}
+  .c2 .team-name{color:#66ff99} .c2 .team-score{color:#00C853;text-shadow:0 0 60px rgba(0,200,83,.5)}
+  .c3{background:linear-gradient(135deg,#1a1000,#332000);border:2px solid rgba(255,152,0,.4)}
+  .c3 .team-name{color:#ffcc66} .c3 .team-score{color:#FF9800;text-shadow:0 0 60px rgba(255,152,0,.5)}
+  .c4{background:linear-gradient(135deg,#100020,#200040);border:2px solid rgba(180,0,255,.4)}
+  .c4 .team-name{color:#cc88ff} .c4 .team-score{color:#9C27B0;text-shadow:0 0 60px rgba(156,39,176,.5)}
+  .c5{background:linear-gradient(135deg,#001a1a,#003333);border:2px solid rgba(0,188,212,.4)}
+  .c5 .team-name{color:#66ddee} .c5 .team-score{color:#00BCD4;text-shadow:0 0 60px rgba(0,188,212,.5)}
+  .c6{background:linear-gradient(135deg,#1a0a00,#331500);border:2px solid rgba(255,87,34,.4)}
+  .c6 .team-name{color:#ff9966} .c6 .team-score{color:#FF5722;text-shadow:0 0 60px rgba(255,87,34,.5)}
+  .c7{background:linear-gradient(135deg,#10101a,#1a1a33);border:2px solid rgba(63,81,181,.4)}
+  .c7 .team-name{color:#8888ff} .c7 .team-score{color:#3F51B5;text-shadow:0 0 60px rgba(63,81,181,.5)}
 
-  .vs-line {
-    width: 1px;
-    flex: 1;
-    background: linear-gradient(to bottom, transparent, #333, transparent);
-  }
+  /* VS / Divider */
+  .vs-divider { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 10px; gap:8px; }
+  .vs-line { width:1px; flex:1; background:linear-gradient(to bottom,transparent,#333,transparent); }
+  .vs-text { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; color:#333; letter-spacing:2px; }
 
-  .vs-text {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    color: #333;
-    letter-spacing: 2px;
-  }
+  /* Sablier */
+  .sablier-ring { position:relative; width:90px; height:90px; }
+  .sablier-ring svg { width:90px; height:90px; transform:rotate(-90deg); }
+  .ring-bg { fill:none; stroke:#222; stroke-width:8; }
+  .ring-progress { fill:none; stroke:var(--or); stroke-width:8; stroke-linecap:round; stroke-dasharray:314; stroke-dashoffset:0; transition:stroke-dashoffset 1s linear,stroke 0.3s; }
+  .ring-progress.urgent { stroke:var(--rouge); }
+  .timer-display { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Bebas Neue',sans-serif; font-size:1.9rem; color:var(--blanc); letter-spacing:2px; }
+  .timer-display.urgent { color:var(--rouge); }
+  .timer-controls { display:flex; gap:6px; align-items:center; }
+  .t-btn { width:40px; height:40px; border-radius:50%; border:2px solid #333; background:#111; color:var(--blanc); font-size:1rem; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; }
+  .t-btn:hover { background:#222; border-color:#555; }
+  .t-btn.play { background:var(--vert); border-color:var(--vert); color:#000; }
 
-  /* Timer zone */
-  .timer-zone {
-    flex-shrink: 0;
-    padding: 8px 20px 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
+  /* Flash */
+  .flash-overlay { position:fixed; inset:0; background:rgba(232,0,58,.35); pointer-events:none; opacity:0; transition:opacity 0.1s; z-index:999; }
+  .flash-overlay.active { opacity:1; }
 
-  /* Sablier SVG */
-  .sablier-ring {
-    position: relative;
-    width: 120px;
-    height: 120px;
-  }
+  /* Overlay recap */
+  .manche-overlay { position:fixed; inset:0; background:rgba(0,0,0,.92); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:200; opacity:0; pointer-events:none; transition:opacity 0.4s; }
+  .manche-overlay.visible { opacity:1; pointer-events:all; }
+  .manche-overlay h2 { font-family:'Bebas Neue',sans-serif; font-size:3.5rem; color:var(--or); letter-spacing:8px; text-align:center; }
+  .manche-overlay p { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; color:#888; letter-spacing:3px; margin-top:8px; text-align:center; }
+  .scores-recap { display:flex; gap:30px; flex-wrap:wrap; justify-content:center; margin-top:24px; }
+  .recap-item { text-align:center; }
+  .recap-item .r-name { font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#666; }
+  .recap-item .r-score { font-family:'Bebas Neue',sans-serif; font-size:3rem; }
+  .btn-continuer { margin-top:24px; padding:12px 40px; background:var(--or); color:#000; border:none; font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:4px; cursor:pointer; border-radius:4px; transition:transform 0.15s; }
+  .btn-continuer:hover { transform:scale(1.04); }
 
-  .sablier-ring svg {
-    width: 120px;
-    height: 120px;
-    transform: rotate(-90deg);
-  }
+  /* Proj controls */
+  .proj-controls { flex-shrink:0; padding:8px 16px 12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; border-top:1px solid #1a1a1a; }
+  .ctrl-btn { padding:9px 16px; border:1px solid #333; background:#111; color:var(--blanc); font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; cursor:pointer; border-radius:6px; transition:all 0.2s; }
+  .ctrl-btn:hover { background:#222; border-color:#555; }
+  .ctrl-btn.primary { background:var(--or); color:#000; border-color:var(--or); }
+  .ctrl-btn.danger { border-color:#500; color:#ff4444; }
+  .ctrl-btn.danger:hover { background:#1a0000; }
 
-  .sablier-ring .ring-bg {
-    fill: none;
-    stroke: #222;
-    stroke-width: 8;
-  }
+  /* PAGE SCOREURS */
+  #page-scoreurs { flex-direction:column; background:var(--noir); }
+  .scoreurs-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; flex:1; }
+  .scoreur-panel { border-radius:12px; padding:14px 12px; display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .scoreur-team-name { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:3px; text-align:center; }
+  .scoreur-score-display { font-family:'Bebas Neue',sans-serif; font-size:3.6rem; line-height:1; text-align:center; }
+  .scoreur-score-display.bump { animation:scoreBump 0.4s ease; }
+  .scoreur-btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%; }
+  .score-add-btn { padding:14px 6px; border:none; border-radius:10px; font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:2px; cursor:pointer; transition:transform 0.1s,opacity 0.1s; touch-action:manipulation; }
+  .score-add-btn:active { transform:scale(0.94); opacity:0.8; }
+  .score-minus-btn { grid-column:1/-1; padding:9px; background:#1a1a1a; border:1px solid #333; border-radius:8px; color:#666; font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:all 0.15s; touch-action:manipulation; }
+  .score-minus-btn:active { background:#2a0a0a; color:#ff4444; }
 
-  .sablier-ring .ring-progress {
-    fill: none;
-    stroke: var(--or);
-    stroke-width: 8;
-    stroke-linecap: round;
-    stroke-dasharray: 314;
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 1s linear, stroke 0.3s;
-  }
+  .scoreurs-bottom { flex-shrink:0; border-top:1px solid #1a1a1a; padding:10px 12px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .manche-selector { display:flex; align-items:center; gap:8px; }
+  .manche-selector label { font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#555; }
+  .manche-selector select { background:#111; border:1px solid #333; color:var(--blanc); padding:6px 10px; font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; border-radius:6px; cursor:pointer; outline:none; }
+  .timer-scoreur { display:flex; align-items:center; gap:8px; margin-left:auto; }
+  .timer-mini { font-family:'Bebas Neue',sans-serif; font-size:2rem; color:var(--or); min-width:50px; text-align:center; }
+  .timer-mini.urgent { color:var(--rouge); }
+  .reset-scores-btn { padding:6px 12px; background:transparent; border:1px solid #400; color:#933; font-family:'Barlow Condensed',sans-serif; font-size:0.78rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; cursor:pointer; border-radius:6px; transition:all 0.2s; }
+  .reset-scores-btn:hover { background:#1a0000; color:#f44; border-color:#f44; }
 
-  .sablier-ring .ring-progress.urgent { stroke: var(--rouge); }
+  /* PAGE RÉGLAGES */
+  #page-reglages { flex-direction:column; background:var(--noir); overflow-y:auto; padding:14px; gap:14px; }
+  .regl-section { background:#111; border:1px solid #1e1e1e; border-radius:14px; padding:18px; }
+  .regl-title { font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:#3a3a3a; margin-bottom:14px; }
 
-  .timer-display {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.4rem;
-    color: var(--blanc);
-    letter-spacing: 2px;
-  }
+  /* Spinner */
+  .spinner-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .spinner-label { font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:600; letter-spacing:2px; color:#777; flex:1; }
+  .spinner-ctrl { display:flex; align-items:center; gap:10px; }
+  .spin-btn { width:38px; height:38px; border-radius:50%; border:1px solid #333; background:#1a1a1a; color:var(--blanc); font-size:1.2rem; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:700; touch-action:manipulation; user-select:none; }
+  .spin-btn:hover { background:#2a2a2a; border-color:#555; }
+  .spin-btn:active { transform:scale(0.88); }
+  .spin-val { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; color:var(--or); min-width:64px; text-align:center; letter-spacing:2px; }
+  .spin-hint { font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; color:#2a2a2a; letter-spacing:1.5px; margin-top:2px; }
 
-  .timer-display.urgent { color: var(--rouge); }
+  /* Noms */
+  .teams-names-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .team-name-row { display:flex; flex-direction:column; gap:5px; }
+  .team-name-label { font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:3px; text-transform:uppercase; opacity:0.5; }
+  .team-name-input { padding:9px 12px; background:#0a0a0a; border:1px solid #222; border-radius:8px; color:var(--blanc); font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:700; letter-spacing:2px; outline:none; text-transform:uppercase; transition:border-color 0.2s; }
+  .apply-btn-full { width:100%; padding:13px; background:var(--or); color:#000; border:none; font-family:'Bebas Neue',sans-serif; font-size:1.15rem; letter-spacing:4px; cursor:pointer; border-radius:8px; margin-top:14px; transition:opacity 0.2s; }
+  .apply-btn-full:hover { opacity:0.85; }
 
-  /* Flash rouge */
-  .flash-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(232,0,58,0.35);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.1s;
-    z-index: 999;
-  }
-  .flash-overlay.active { opacity: 1; }
+  /* Sync */
+  .sync-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .sync-info { font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; color:#2a2a2a; letter-spacing:1px; margin-top:10px; line-height:1.6; }
 
-  /* Overlay transition manche */
-  .manche-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.92);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s;
-  }
-  .manche-overlay.visible {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .manche-overlay h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 5rem;
-    color: var(--or);
-    letter-spacing: 8px;
-    text-align: center;
-  }
-  .manche-overlay p {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1.3rem;
-    color: #888;
-    letter-spacing: 3px;
-    margin-top: 12px;
-    text-align: center;
-  }
-  .manche-overlay .scores-recap {
-    display: flex;
-    gap: 60px;
-    margin-top: 40px;
-  }
-  .recap-item {
-    text-align: center;
-  }
-  .recap-item .r-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #666;
-  }
-  .recap-item .r-score {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 4rem;
-  }
-  .recap-item.rouge .r-score { color: var(--rouge); }
-  .recap-item.bleu .r-score { color: var(--bleu); }
-
-  .btn-continuer {
-    margin-top: 40px;
-    padding: 16px 48px;
-    background: var(--or);
-    color: #000;
-    border: none;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem;
-    letter-spacing: 4px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
-  .btn-continuer:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(255,215,0,0.4); }
-
-  /* Contrôles projection */
-  .proj-controls {
-    flex-shrink: 0;
-    padding: 12px 24px 16px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    border-top: 1px solid #1a1a1a;
-  }
-
-  .ctrl-btn {
-    padding: 10px 22px;
-    border: 1px solid #333;
-    background: #111;
-    color: var(--blanc);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s;
-  }
-  .ctrl-btn:hover { background: #222; border-color: #555; }
-  .ctrl-btn.primary { background: var(--or); color: #000; border-color: var(--or); }
-  .ctrl-btn.primary:hover { background: #e6c200; }
-  .ctrl-btn.danger { border-color: #500; color: #ff4444; }
-  .ctrl-btn.danger:hover { background: #1a0000; }
-
-  /* ========== PAGE SCOREURS ========== */
-  #page-scoreurs {
-    flex-direction: column;
-    background: var(--noir);
-    overflow-y: auto;
-  }
-
-  .scoreurs-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    padding: 16px;
-    flex: 1;
-  }
-
-  .scoreur-panel {
-    border-radius: 14px;
-    padding: 20px 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .scoreur-panel.panel-a {
-    background: linear-gradient(160deg, #1a0010, #2d0020);
-    border: 2px solid rgba(232,0,58,0.5);
-  }
-
-  .scoreur-panel.panel-b {
-    background: linear-gradient(160deg, #001020, #001e3d);
-    border: 2px solid rgba(0,102,255,0.5);
-  }
-
-  .scoreur-team-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    letter-spacing: 4px;
-    text-align: center;
-  }
-  .panel-a .scoreur-team-name { color: #ff4d7a; }
-  .panel-b .scoreur-team-name { color: #4d9fff; }
-
-  .scoreur-score-display {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 5rem;
-    line-height: 1;
-    text-align: center;
-    transition: transform 0.2s;
-  }
-  .panel-a .scoreur-score-display { color: var(--rouge); }
-  .panel-b .scoreur-score-display { color: var(--bleu); }
-  .scoreur-score-display.bump { animation: scoreBump 0.4s ease; }
-
-  .scoreur-btns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    width: 100%;
-  }
-
-  .score-add-btn {
-    padding: 16px 8px;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: transform 0.1s, opacity 0.1s;
-    touch-action: manipulation;
-  }
-  .score-add-btn:active { transform: scale(0.94); opacity: 0.8; }
-
-  .panel-a .score-add-btn { background: var(--rouge); color: #fff; }
-  .panel-b .score-add-btn { background: var(--bleu); color: #fff; }
-
-  .score-minus-btn {
-    grid-column: 1 / -1;
-    padding: 10px;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 8px;
-    color: #666;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.15s;
-    touch-action: manipulation;
-  }
-  .score-minus-btn:active { background: #2a0a0a; color: #ff4444; }
-
-  /* Config noms */
-  .scoreurs-config {
-    padding: 12px 16px 16px;
-    border-top: 1px solid #1a1a1a;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-    flex-shrink: 0;
-  }
-
-  .config-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #555;
-    flex-basis: 100%;
-  }
-
-  .name-input {
-    flex: 1;
-    min-width: 120px;
-    padding: 10px 14px;
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 6px;
-    color: var(--blanc);
-    font-family: 'Barlow', sans-serif;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .name-input:focus { border-color: var(--or); }
-
-  .name-input.input-a:focus { border-color: var(--rouge); }
-  .name-input.input-b:focus { border-color: var(--bleu); }
-
-  .apply-btn {
-    padding: 10px 20px;
-    background: var(--or);
-    color: #000;
-    border: none;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 2px;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: opacity 0.2s;
-    flex-shrink: 0;
-  }
-  .apply-btn:hover { opacity: 0.85; }
-
-  /* Manche selector scoreurs */
-  .manche-selector {
-    padding: 10px 16px 0;
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-    align-items: center;
-  }
-  .manche-selector label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #555;
-  }
-  .manche-selector select {
-    background: #111;
-    border: 1px solid #333;
-    color: var(--blanc);
-    padding: 6px 12px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.9rem;
-    border-radius: 6px;
-    cursor: pointer;
-    outline: none;
-  }
-  .manche-selector select:focus { border-color: var(--or); }
-
-  .reset-scores-btn {
-    margin-left: auto;
-    padding: 6px 16px;
-    background: transparent;
-    border: 1px solid #400;
-    color: #933;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s;
-  }
-  .reset-scores-btn:hover { background: #1a0000; color: #f44; border-color: #f44; }
-
-  /* Timer controls */
-  .timer-controls {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: center;
-    margin-top: 6px;
-  }
-
-  .t-btn {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    border: 2px solid #333;
-    background: #111;
-    color: var(--blanc);
-    font-size: 1.3rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .t-btn:hover { background: #222; border-color: #555; }
-  .t-btn.play { background: var(--vert); border-color: var(--vert); color: #000; }
-  .t-btn.play:hover { background: #00e060; }
-  .t-btn.stop { background: #333; }
-
-  /* Tick sonore */
-  @keyframes tickPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.06); }
-    100% { transform: scale(1); }
-  }
-  .ring-progress.ticking { animation: none; }
-
-  /* Responsive tablette */
-  @media (max-width: 600px) {
-    .scoreurs-grid { grid-template-columns: 1fr; }
-    .score-add-btn { padding: 20px 8px; font-size: 1.8rem; }
+  @media(max-width:600px){
+    .scoreurs-grid{grid-template-columns:1fr}
+    .teams-names-grid{grid-template-columns:1fr}
+    .score-add-btn{padding:18px 6px;font-size:1.6rem}
   }
 </style>
 </head>
-<body data-new-gr-c-s-check-loaded="14.1275.0" data-gr-ext-installed="">
+<body>
 
-<!-- Flash overlay -->
 <div class="flash-overlay" id="flashOverlay"></div>
 
-<!-- Overlay transition manche -->
 <div class="manche-overlay" id="mancheOverlay">
-  <h2 id="mancheOverlayTitle">FIN DE MANCHE</h2>
-  <p id="mancheOverlaySubtitle">Préparez-vous pour la suite</p>
-  <div class="scores-recap">
-    <div class="recap-item rouge">
-      <div class="r-name" id="recapNomA">ÉQUIPE A</div>
-      <div class="r-score" id="recapScoreA">0</div>
-    </div>
-    <div class="recap-item bleu">
-      <div class="r-name" id="recapNomB">ÉQUIPE B</div>
-      <div class="r-score" id="recapScoreB">0</div>
-    </div>
-  </div>
+  <h2 id="mancheOverlayTitle">SCORES ACTUELS</h2>
+  <p id="mancheOverlaySubtitle"></p>
+  <div class="scores-recap" id="recapScores"></div>
   <button class="btn-continuer" onclick="fermerOverlay()">CONTINUER</button>
 </div>
 
-<!-- Navigation -->
 <nav id="tab-nav">
-  <button class="tab-btn active" onclick="showTab(&#39;projection&#39;)">🎬 Projection</button>
-  <button class="tab-btn" onclick="showTab(&#39;scoreurs&#39;)">✏️ Scoreurs</button>
+  <button class="tab-btn" onclick="showTab(&#39;projection&#39;,event)">🎬 Projection</button>
+  <button class="tab-btn active" onclick="showTab(&#39;scoreurs&#39;,event)">✏️ Scoreurs</button>
+  <button class="tab-btn" onclick="showTab(&#39;reglages&#39;,event)">⚙️ Réglages</button>
 </nav>
 
-<!-- PAGE PROJECTION -->
-<div class="page active" id="page-projection">
-
+<!-- PROJECTION -->
+<div class="page" id="page-projection">
   <div class="proj-header">
     <div class="proj-title">TIMES UP</div>
     <div class="manche-badge" id="mancheBadge">MANCHE 1 — TOUT PERMIS</div>
-    <div id="syncStatus" style="font-family: &quot;Barlow Condensed&quot;, sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; color: rgb(232, 0, 58);">● HORS LIGNE</div>
+    <div id="syncStatus" style="color: rgb(0, 200, 83);">● EN LIGNE</div>
   </div>
-
-  <div class="scores-double">
-    <!-- Équipe A -->
-    <div class="team-block equipe-a">
-      <div class="team-name" id="projNomA">ÉQUIPE ROUGE</div>
-      <div class="team-score" id="projScoreA">0</div>
-      <div class="team-pts-label">points</div>
-    </div>
-
-    <!-- Divider + Timer -->
-    <div class="vs-divider">
-      <div class="vs-line"></div>
-      <div class="sablier-ring" id="sablierRing">
-        <svg viewBox="0 0 120 120">
-          <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
-          <circle class="ring-progress" id="ringProgress" cx="60" cy="60" r="50" style="stroke-dashoffset: 0;"></circle>
-        </svg>
-        <div class="timer-display" id="timerDisplay">45</div>
+  <div class="scores-zone" id="scoresZone">
+    <div class="match-row">
+      <div class="team-block c0">
+        <div class="team-name" id="projNom0">ÉQUIPE ROUGE 1</div>
+        <div class="team-score" id="projScore0">2</div>
+        <div class="team-pts-label">points</div>
       </div>
-      <div class="timer-controls">
-        <button class="t-btn play" id="playBtn" onclick="toggleTimer()">▶</button>
-        <button class="t-btn stop" onclick="resetTimer()">↺</button>
+      <div class="vs-divider">
+        <div class="vs-line"></div>
+        
+        <div class="sablier-ring">
+          <svg viewBox="0 0 120 120">
+            <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
+            <circle class="ring-progress" id="ringProgress" cx="60" cy="60" r="50" style="stroke-dashoffset: 0;"></circle>
+          </svg>
+          <div class="timer-display" id="timerDisplay">45</div>
+        </div>
+        <div class="timer-controls">
+          <button class="t-btn play" id="playBtn" onclick="toggleTimer()">▶</button>
+          <button class="t-btn" onclick="resetTimer()">↺</button>
+        </div>
+        
+        <div class="vs-text">VS</div>
+        <div class="vs-line"></div>
       </div>
-      <div class="vs-text">VS</div>
-      <div class="vs-line"></div>
+      <div class="team-block c1">
+        <div class="team-name" id="projNom1">ÉQUIPE BLEUE 4</div>
+        <div class="team-score" id="projScore1">0</div>
+        <div class="team-pts-label">points</div>
+      </div>
     </div>
-
-    <!-- Équipe B -->
-    <div class="team-block equipe-b">
-      <div class="team-name" id="projNomB">ÉQUIPE BLEUE</div>
-      <div class="team-score" id="projScoreB">0</div>
-      <div class="team-pts-label">points</div>
+    <div class="match-row">
+      <div class="team-block c2">
+        <div class="team-name" id="projNom2">ÉQUIPE VERTE 2</div>
+        <div class="team-score" id="projScore2">0</div>
+        <div class="team-pts-label">points</div>
+      </div>
+      <div class="vs-divider">
+        <div class="vs-line"></div>
+        
+        <div class="vs-text">VS</div>
+        <div class="vs-line"></div>
+      </div>
+      <div class="team-block c3">
+        <div class="team-name" id="projNom3">ÉQUIPE ORANGE 5</div>
+        <div class="team-score" id="projScore3">0</div>
+        <div class="team-pts-label">points</div>
+      </div>
     </div>
-  </div>
-
+    <div class="match-row">
+      <div class="team-block c4">
+        <div class="team-name" id="projNom4">ÉQUIPE VIOLET 3</div>
+        <div class="team-score" id="projScore4">0</div>
+        <div class="team-pts-label">points</div>
+      </div>
+      <div class="vs-divider">
+        <div class="vs-line"></div>
+        
+        <div class="vs-text">VS</div>
+        <div class="vs-line"></div>
+      </div>
+      <div class="team-block c5">
+        <div class="team-name" id="projNom5">ÉQUIPE CYAN 6</div>
+        <div class="team-score" id="projScore5">0</div>
+        <div class="team-pts-label">points</div>
+      </div>
+    </div></div>
   <div class="proj-controls">
     <button class="ctrl-btn" onclick="changerManche(-1)">◀ Manche</button>
     <button class="ctrl-btn" onclick="changerManche(1)">Manche ▶</button>
@@ -702,439 +297,444 @@
   </div>
 </div>
 
-<!-- PAGE SCOREURS -->
-<div class="page" id="page-scoreurs">
-
-  <div class="manche-selector">
-    <label>Manche :</label>
-    <select id="mancheSelect" onchange="syncManche()">
-      <option value="0">1 — Tout permis</option>
-      <option value="1">2 — Un mot + mimiques</option>
-      <option value="2">3 — Mime pur</option>
-    </select>
+<!-- SCOREURS -->
+<div class="page active" id="page-scoreurs">
+  <div class="scoreurs-grid" id="scoreursGrid">
+    <div class="scoreur-panel" style="background:linear-gradient(160deg,#E8003A11,#E8003A22);border:2px solid #E8003A55">
+      <div class="scoreur-team-name" id="scoreurNom0" style="color:#ff4d7a">ÉQUIPE ROUGE 1</div>
+      <div class="scoreur-score-display" id="scoreurScore0" style="color:#E8003A">2</div>
+      <div class="scoreur-btns">
+        <button class="score-add-btn" onclick="addScore(0,1)" style="background:#E8003A">+1</button>
+        <button class="score-add-btn" onclick="addScore(0,2)" style="background:#E8003A">+2</button>
+        <button class="score-minus-btn" onclick="addScore(0,-1)">−1 (annuler)</button>
+      </div>
+    </div>
+    <div class="scoreur-panel" style="background:linear-gradient(160deg,#0066FF11,#0066FF22);border:2px solid #0066FF55">
+      <div class="scoreur-team-name" id="scoreurNom1" style="color:#4d9fff">ÉQUIPE BLEUE 4</div>
+      <div class="scoreur-score-display" id="scoreurScore1" style="color:#0066FF">0</div>
+      <div class="scoreur-btns">
+        <button class="score-add-btn" onclick="addScore(1,1)" style="background:#0066FF">+1</button>
+        <button class="score-add-btn" onclick="addScore(1,2)" style="background:#0066FF">+2</button>
+        <button class="score-minus-btn" onclick="addScore(1,-1)">−1 (annuler)</button>
+      </div>
+    </div>
+    <div class="scoreur-panel" style="background:linear-gradient(160deg,#00C85311,#00C85322);border:2px solid #00C85355">
+      <div class="scoreur-team-name" id="scoreurNom2" style="color:#66ff99">ÉQUIPE VERTE 2</div>
+      <div class="scoreur-score-display" id="scoreurScore2" style="color:#00C853">0</div>
+      <div class="scoreur-btns">
+        <button class="score-add-btn" onclick="addScore(2,1)" style="background:#00C853">+1</button>
+        <button class="score-add-btn" onclick="addScore(2,2)" style="background:#00C853">+2</button>
+        <button class="score-minus-btn" onclick="addScore(2,-1)">−1 (annuler)</button>
+      </div>
+    </div>
+    <div class="scoreur-panel" style="background:linear-gradient(160deg,#FF980011,#FF980022);border:2px solid #FF980055">
+      <div class="scoreur-team-name" id="scoreurNom3" style="color:#ffcc66">ÉQUIPE ORANGE 5</div>
+      <div class="scoreur-score-display" id="scoreurScore3" style="color:#FF9800">0</div>
+      <div class="scoreur-btns">
+        <button class="score-add-btn" onclick="addScore(3,1)" style="background:#FF9800">+1</button>
+        <button class="score-add-btn" onclick="addScore(3,2)" style="background:#FF9800">+2</button>
+        <button class="score-minus-btn" onclick="addScore(3,-1)">−1 (annuler)</button>
+      </div>
+    </div>
+    <div class="scoreur-panel" style="background:linear-gradient(160deg,#9C27B011,#9C27B022);border:2px solid #9C27B055">
+      <div class="scoreur-team-name" id="scoreurNom4" style="color:#cc88ff">ÉQUIPE VIOLET 3</div>
+      <div class="scoreur-score-display" id="scoreurScore4" style="color:#9C27B0">0</div>
+      <div class="scoreur-btns">
+        <button class="score-add-btn" onclick="addScore(4,1)" style="background:#9C27B0">+1</button>
+        <button class="score-add-btn" onclick="addScore(4,2)" style="background:#9C27B0">+2</button>
+        <button class="score-minus-btn" onclick="addScore(4,-1)">−1 (annuler)</button>
+      </div>
+    </div>
+    <div class="scoreur-panel" style="background:linear-gradient(160deg,#00BCD411,#00BCD422);border:2px solid #00BCD455">
+      <div class="scoreur-team-name" id="scoreurNom5" style="color:#66ddee">ÉQUIPE CYAN 6</div>
+      <div class="scoreur-score-display" id="scoreurScore5" style="color:#00BCD4">0</div>
+      <div class="scoreur-btns">
+        <button class="score-add-btn" onclick="addScore(5,1)" style="background:#00BCD4">+1</button>
+        <button class="score-add-btn" onclick="addScore(5,2)" style="background:#00BCD4">+2</button>
+        <button class="score-minus-btn" onclick="addScore(5,-1)">−1 (annuler)</button>
+      </div>
+    </div></div>
+  <div class="scoreurs-bottom">
+    <div class="manche-selector">
+      <label>Manche :</label>
+      <select id="mancheSelect" onchange="syncManche()">
+        <option value="0">1 — Tout permis</option>
+        <option value="1">2 — Un mot + mimiques</option>
+        <option value="2">3 — Mime pur</option>
+      </select>
+    </div>
     <button class="reset-scores-btn" onclick="resetScores()">Reset scores</button>
-  </div>
-
-  <div class="scoreurs-grid">
-    <!-- Panel Équipe A -->
-    <div class="scoreur-panel panel-a">
-      <div class="scoreur-team-name" id="scoreurNomA">ÉQUIPE ROUGE</div>
-      <div class="scoreur-score-display" id="scoreurScoreA">0</div>
-      <div class="scoreur-btns">
-        <button class="score-add-btn" onclick="addScore(&#39;a&#39;, 1)">+1</button>
-        <button class="score-add-btn" onclick="addScore(&#39;a&#39;, 2)">+2</button>
-        <button class="score-minus-btn" onclick="addScore(&#39;a&#39;, -1)">−1 (annuler)</button>
-      </div>
+    <div class="timer-scoreur">
+      <button class="t-btn play" id="playBtn" onclick="toggleTimer()">▶</button>
+      <div class="timer-mini" id="timerMini">45</div>
+      <button class="t-btn" onclick="resetTimer()">↺</button>
     </div>
-
-    <!-- Panel Équipe B -->
-    <div class="scoreur-panel panel-b">
-      <div class="scoreur-team-name" id="scoreurNomB">ÉQUIPE BLEUE</div>
-      <div class="scoreur-score-display" id="scoreurScoreB">0</div>
-      <div class="scoreur-btns">
-        <button class="score-add-btn" onclick="addScore(&#39;b&#39;, 1)">+1</button>
-        <button class="score-add-btn" onclick="addScore(&#39;b&#39;, 2)">+2</button>
-        <button class="score-minus-btn" onclick="addScore(&#39;b&#39;, -1)">−1 (annuler)</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="scoreurs-config">
-    <div class="config-label">Noms des équipes</div>
-    <input class="name-input input-a" id="inputNomA" type="text" placeholder="Équipe Rouge" value="ÉQUIPE ROUGE" maxlength="20">
-    <input class="name-input input-b" id="inputNomB" type="text" placeholder="Équipe Bleue" value="ÉQUIPE BLEUE" maxlength="20">
-    <button class="apply-btn" onclick="appliquerNoms()">Appliquer</button>
   </div>
 </div>
 
-<audio id="audioCtx"></audio>
+<!-- RÉGLAGES -->
+<div class="page" id="page-reglages">
+
+  <div class="regl-section">
+    <div class="regl-title">⏱ Durée du sablier</div>
+    <div class="spinner-row">
+      <div class="spinner-label">Secondes par tour</div>
+      <div class="spinner-ctrl">
+        <button class="spin-btn" onclick="changeTimer(-5)">−</button>
+        <div class="spin-val" id="spinTimer">45s</div>
+        <button class="spin-btn" onclick="changeTimer(5)">+</button>
+      </div>
+    </div>
+    <div class="spin-hint">Suggéré : 30s · 45s · 60s · 90s · 120s</div>
+  </div>
+
+  <div class="regl-section">
+    <div class="regl-title">👥 Nombre d'équipes</div>
+    <div class="spinner-row">
+      <div class="spinner-label">Équipes en jeu</div>
+      <div class="spinner-ctrl">
+        <button class="spin-btn" onclick="changeNbEquipes(-2)">−</button>
+        <div class="spin-val" id="spinEquipes">6</div>
+        <button class="spin-btn" onclick="changeNbEquipes(2)">+</button>
+      </div>
+    </div>
+    <div class="spin-hint">2 · 4 · 6 · 8 équipes max — toujours par paires</div>
+  </div>
+
+  <div class="regl-section">
+    <div class="regl-title">✏️ Noms des équipes</div>
+    <div class="teams-names-grid" id="teamsNamesGrid">
+    <div class="team-name-row">
+      <div class="team-name-label" style="color:#E8003A88">Équipe 1</div>
+      <input class="team-name-input" id="inputNom0" type="text" value="ÉQUIPE ROUGE" maxlength="20" style="border-color: rgba(232, 0, 58, 0.2);" onfocus="this.style.borderColor=&#39;#E8003A&#39;" onblur="this.style.borderColor=&#39;#E8003A33&#39;">
+    </div>
+    <div class="team-name-row">
+      <div class="team-name-label" style="color:#0066FF88">Équipe 2</div>
+      <input class="team-name-input" id="inputNom1" type="text" value="ÉQUIPE BLEUE" maxlength="20" style="border-color: rgba(0, 102, 255, 0.2);" onfocus="this.style.borderColor=&#39;#0066FF&#39;" onblur="this.style.borderColor=&#39;#0066FF33&#39;">
+    </div>
+    <div class="team-name-row">
+      <div class="team-name-label" style="color:#00C85388">Équipe 3</div>
+      <input class="team-name-input" id="inputNom2" type="text" value="ÉQUIPE VERTE" maxlength="20" style="border-color: rgba(0, 200, 83, 0.2);" onfocus="this.style.borderColor=&#39;#00C853&#39;" onblur="this.style.borderColor=&#39;#00C85333&#39;">
+    </div>
+    <div class="team-name-row">
+      <div class="team-name-label" style="color:#FF980088">Équipe 4</div>
+      <input class="team-name-input" id="inputNom3" type="text" value="ÉQUIPE ORANGE" maxlength="20" style="border-color: rgba(255, 152, 0, 0.2);" onfocus="this.style.borderColor=&#39;#FF9800&#39;" onblur="this.style.borderColor=&#39;#FF980033&#39;">
+    </div>
+    <div class="team-name-row">
+      <div class="team-name-label" style="color:#9C27B088">Équipe 5</div>
+      <input class="team-name-input" id="inputNom4" type="text" value="ÉQUIPE VIOLET" maxlength="20" style="border-color: rgba(156, 39, 176, 0.2);" onfocus="this.style.borderColor=&#39;#9C27B0&#39;" onblur="this.style.borderColor=&#39;#9C27B033&#39;">
+    </div>
+    <div class="team-name-row">
+      <div class="team-name-label" style="color:#00BCD488">Équipe 6</div>
+      <input class="team-name-input" id="inputNom5" type="text" value="ÉQUIPE CYAN" maxlength="20" style="border-color: rgba(0, 188, 212, 0.2);" onfocus="this.style.borderColor=&#39;#00BCD4&#39;" onblur="this.style.borderColor=&#39;#00BCD433&#39;">
+    </div></div>
+    <button class="apply-btn-full" onclick="appliquerNoms()">APPLIQUER LES NOMS</button>
+  </div>
+
+  <div class="regl-section">
+    <div class="regl-title">🔄 Passes par équipe / par manche</div>
+    <div class="spinner-row">
+      <div class="spinner-label">Passes autorisées</div>
+      <div class="spinner-ctrl">
+        <button class="spin-btn" onclick="changePasses(-1)">−</button>
+        <div class="spin-val" id="spinPasses">3</div>
+        <button class="spin-btn" onclick="changePasses(1)">+</button>
+      </div>
+    </div>
+    <div class="spin-hint">0 = passes illimitées</div>
+  </div>
+
+  <div class="regl-section">
+    <div class="regl-title">📡 Synchronisation réseau</div>
+    <div class="sync-row">
+      <div id="syncStatusRegl" style="font-family: &quot;Barlow Condensed&quot;, sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 2px; color: rgb(0, 200, 83);">● EN LIGNE</div>
+      <button class="ctrl-btn" onclick="demanderEtat()" style="font-size:0.78rem;padding:7px 12px;">🔄 Resynchroniser</button>
+    </div>
+    <div class="sync-info">
+      Fonctionne sur le même WiFi entre téléphone, tablette et PC.<br>
+      Ouvrez la même URL sur chaque appareil.
+    </div>
+  </div>
+
+</div>
 
 <script>
-// ========== SYNC TEMPS RÉEL ==========
-// Priorité 1 : BroadcastChannel (même navigateur, instantané, sans serveur)
-// Priorité 2 : WebSocket PieSocket (multi-appareils)
+// ===== CONFIG =====
+const MANCHES = ['MANCHE 1 — TOUT PERMIS','MANCHE 2 — UN MOT + MIMIQUES','MANCHE 3 — MIME PUR'];
+const TC = ['#E8003A','#0066FF','#00C853','#FF9800','#9C27B0','#00BCD4','#FF5722','#3F51B5'];
+const TCL = ['#ff4d7a','#4d9fff','#66ff99','#ffcc66','#cc88ff','#66ddee','#ff9966','#8888ff'];
+const DEFAULT_NOMS = ['ROUGE','BLEUE','VERTE','ORANGE','VIOLET','CYAN','EMBER','INDIGO'];
 
-const CHANNEL = 'lumiia-timesup-2026-v1';
-const clientId = Math.random().toString(36).slice(2, 8);
-
-// --- BroadcastChannel (onglets du même navigateur) ---
-let bc = null;
-try {
-  bc = new BroadcastChannel(CHANNEL);
-  bc.onmessage = (evt) => {
-    try {
-      const msg = evt.data;
-      if (msg.from === clientId) return;
-      applyRemoteState(msg);
-    } catch(e) {}
-  };
-} catch(e) { bc = null; }
-
-// --- WebSocket (multi-appareils / fallback) ---
-let ws = null;
-let wsReady = false;
-
-function connectWS() {
-  try {
-    ws = new WebSocket(`wss://s14490.blr1.piesocket.com/v3/${CHANNEL}?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9f72bx&notify_self=1`);
-    ws.onopen = () => {
-      wsReady = true;
-      showSyncStatus('connected');
-      ws.send(JSON.stringify({ type: 'request_state', from: clientId }));
-    };
-    ws.onmessage = (evt) => {
-      try {
-        const msg = JSON.parse(evt.data);
-        if (msg.from === clientId) return;
-        if (msg.type === 'state' || msg.type === 'state_response') {
-          applyRemoteState(msg);
-        }
-        if (msg.type === 'request_state') {
-          setTimeout(() => broadcast('state_response'), 300);
-        }
-      } catch(e) {}
-    };
-    ws.onclose = () => {
-      wsReady = false;
-      if (!bc) showSyncStatus('disconnected');
-      setTimeout(connectWS, 3000);
-    };
-    ws.onerror = () => {
-      wsReady = false;
-      if (!bc) showSyncStatus('disconnected');
-    };
-  } catch(e) {
-    if (!bc) showSyncStatus('disconnected');
-  }
-}
-
-function applyRemoteState(msg) {
-  state.scoreA = msg.scoreA ?? state.scoreA;
-  state.scoreB = msg.scoreB ?? state.scoreB;
-  state.nomA   = msg.nomA   ?? state.nomA;
-  state.nomB   = msg.nomB   ?? state.nomB;
-  state.manche = msg.manche ?? state.manche;
-  document.getElementById('mancheSelect').value = state.manche;
-  document.getElementById('inputNomA').value = state.nomA;
-  document.getElementById('inputNomB').value = state.nomB;
-  render();
-}
-
-function broadcast(type = 'state') {
-  const payload = {
-    type,
-    from: clientId,
-    scoreA: state.scoreA,
-    scoreB: state.scoreB,
-    nomA: state.nomA,
-    nomB: state.nomB,
-    manche: state.manche,
-  };
-  // BroadcastChannel en priorité (instantané, local)
-  if (bc) bc.postMessage(payload);
-  // WebSocket en parallèle pour multi-appareils
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify(payload));
-  }
-}
-
-function showSyncStatus(status) {
-  const el = document.getElementById('syncStatus');
-  if (!el) return;
-  if (status === 'connected') {
-    el.textContent = '● EN LIGNE';
-    el.style.color = '#00C853';
-  } else {
-    el.textContent = '● HORS LIGNE';
-    el.style.color = '#E8003A';
-  }
-}
-
-// BroadcastChannel disponible = toujours "en ligne" localement
-if (bc) showSyncStatus('connected');
-
-// ========== STATE ==========
-const MANCHES = [
-  'MANCHE 1 — TOUT PERMIS',
-  'MANCHE 2 — UN MOT + MIMIQUES',
-  'MANCHE 3 — MIME PUR'
-];
-
+// ===== STATE =====
 let state = {
-  scoreA: 0,
-  scoreB: 0,
-  nomA: 'ÉQUIPE ROUGE',
-  nomB: 'ÉQUIPE BLEUE',
-  manche: 0,
-  timerDuree: 45,
-  timerRestant: 45,
-  timerRunning: false,
-  timerInterval: null
+  scores: [0,0], noms: ['ÉQUIPE ROUGE','ÉQUIPE BLEUE'],
+  nbEquipes: 2, manche: 0,
+  timerDuree: 45, timerRestant: 45, timerRunning: false,
+  passes: 3,
 };
+let timerInterval = null;
 
-// ========== TABS ==========
-function showTab(tab) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + tab).classList.add('active');
-  event.target.classList.add('active');
+// ===== SYNC =====
+const CHANNEL_NAME = 'lumiia-timesup-2026';
+const clientId = Math.random().toString(36).slice(2,9);
+let ablyChannel = null;
+let bc = null;
+
+// BroadcastChannel (même navigateur, même machine)
+try {
+  bc = new BroadcastChannel(CHANNEL_NAME);
+  bc.onmessage = e => { if(e.data.from!==clientId) handleMsg(e.data); };
+} catch(e){}
+
+// Ably (multi-appareils, même WiFi)
+try {
+  const ably = new Ably.Realtime({
+    key: 'xVLyHw.Kg9tVQ:gzD8VcHklnNR-IhVH4HkWMrqXkj5-q9GnmPP6sGx3YY',
+    clientId
+  });
+  ablyChannel = ably.channels.get(CHANNEL_NAME);
+  ablyChannel.subscribe(msg => {
+    if(msg.data.from!==clientId) handleMsg(msg.data);
+  });
+  ably.connection.on('connected', () => { setSyncStatus('connected'); demanderEtat(); });
+  ably.connection.on('disconnected', () => { if(!bc) setSyncStatus('disconnected'); });
+  ably.connection.on('failed', () => { if(!bc) setSyncStatus('disconnected'); });
+} catch(e){ if(!bc) setSyncStatus('disconnected'); }
+
+if(bc) setSyncStatus('connected');
+
+function broadcast(type='state'){
+  const p = {
+    type, from:clientId,
+    scores:state.scores, noms:state.noms, nbEquipes:state.nbEquipes,
+    manche:state.manche, timerDuree:state.timerDuree, passes:state.passes
+  };
+  if(bc) bc.postMessage(p);
+  if(ablyChannel) ablyChannel.publish('sync',p);
 }
 
-// ========== SCORES ==========
-function addScore(equipe, val) {
-  if (equipe === 'a') {
-    state.scoreA = Math.max(0, state.scoreA + val);
-    bumpElement('scoreurScoreA');
-    bumpElement('projScoreA');
-  } else {
-    state.scoreB = Math.max(0, state.scoreB + val);
-    bumpElement('scoreurScoreB');
-    bumpElement('projScoreB');
-  }
-  render();
-  broadcast();
+function demanderEtat(){
+  const p = {type:'request_state',from:clientId};
+  if(bc) bc.postMessage(p);
+  if(ablyChannel) ablyChannel.publish('sync',p);
 }
 
-function resetScores() {
-  if (!confirm('Remettre les deux scores à zéro ?')) return;
-  state.scoreA = 0;
-  state.scoreB = 0;
-  render();
-  broadcast();
-}
-
-function resetComplet() {
-  if (!confirm('Reset total : scores + manche + timer ?')) return;
-  state.scoreA = 0;
-  state.scoreB = 0;
-  state.manche = 0;
-  stopTimer();
-  state.timerRestant = state.timerDuree;
-  document.getElementById('mancheSelect').value = '0';
-  render();
-  broadcast();
-}
-
-function bumpElement(id) {
-  const el = document.getElementById(id);
-  el.classList.remove('bump');
-  void el.offsetWidth;
-  el.classList.add('bump');
-  setTimeout(() => el.classList.remove('bump'), 400);
-}
-
-// ========== NOMS ==========
-function appliquerNoms() {
-  const a = document.getElementById('inputNomA').value.trim().toUpperCase() || 'ÉQUIPE ROUGE';
-  const b = document.getElementById('inputNomB').value.trim().toUpperCase() || 'ÉQUIPE BLEUE';
-  state.nomA = a;
-  state.nomB = b;
-  render();
-  broadcast();
-}
-
-// ========== MANCHE ==========
-function changerManche(dir) {
-  state.manche = Math.max(0, Math.min(2, state.manche + dir));
-  document.getElementById('mancheSelect').value = state.manche;
-  render();
-  broadcast();
-}
-
-function syncManche() {
-  state.manche = parseInt(document.getElementById('mancheSelect').value);
-  render();
-  broadcast();
-}
-
-// ========== TIMER ==========
-const CIRCONFERENCE = 2 * Math.PI * 50; // ~314
-
-function toggleTimer() {
-  if (state.timerRunning) {
-    stopTimer();
-  } else {
-    startTimer();
+function handleMsg(msg){
+  if(msg.type==='request_state'){ setTimeout(()=>broadcast('state_response'),300); return; }
+  if(msg.type==='state'||msg.type==='state_response'){
+    const needRebuild = msg.nbEquipes!==undefined && msg.nbEquipes!==state.nbEquipes;
+    if(msg.scores!==undefined) state.scores = msg.scores;
+    if(msg.noms!==undefined) state.noms = msg.noms;
+    if(msg.nbEquipes!==undefined) state.nbEquipes = msg.nbEquipes;
+    if(msg.manche!==undefined) state.manche = msg.manche;
+    if(msg.timerDuree!==undefined){ state.timerDuree=msg.timerDuree; if(!state.timerRunning) state.timerRestant=state.timerDuree; }
+    if(msg.passes!==undefined) state.passes = msg.passes;
+    if(needRebuild) renderAll(); else render();
   }
 }
 
-function startTimer() {
-  if (state.timerRestant <= 0) state.timerRestant = state.timerDuree;
-  state.timerRunning = true;
-  document.getElementById('playBtn').textContent = '⏸';
-  document.getElementById('playBtn').classList.remove('play');
-  document.getElementById('playBtn').style.background = '#555';
+function setSyncStatus(s){
+  const on = s==='connected';
+  const t = on?'● EN LIGNE':'● HORS LIGNE', c = on?'#00C853':'#E8003A';
+  const a = document.getElementById('syncStatus');
+  const b = document.getElementById('syncStatusRegl');
+  if(a){a.textContent=t;a.style.color=c;}
+  if(b){b.textContent=t;b.style.color=c;}
+}
 
-  state.timerInterval = setInterval(() => {
+// ===== TABS =====
+function showTab(tab,event){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+tab).classList.add('active');
+  if(event&&event.target) event.target.classList.add('active');
+}
+
+// ===== SCORES =====
+function addScore(i,v){
+  state.scores[i]=Math.max(0,state.scores[i]+v);
+  bump(`projScore${i}`); bump(`scoreurScore${i}`);
+  render(); broadcast();
+}
+function resetScores(){ if(!confirm('Remettre tous les scores à zéro ?')) return; state.scores=Array(state.nbEquipes).fill(0); render();broadcast(); }
+function resetComplet(){ if(!confirm('Reset total : scores + manche + timer ?')) return; state.scores=Array(state.nbEquipes).fill(0);state.manche=0;stopTimer();state.timerRestant=state.timerDuree;document.getElementById('mancheSelect').value=0;renderAll();broadcast(); }
+function bump(id){ const el=document.getElementById(id);if(!el)return;el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),400); }
+
+// ===== MANCHE =====
+function changerManche(d){ state.manche=Math.max(0,Math.min(2,state.manche+d));document.getElementById('mancheSelect').value=state.manche;render();broadcast(); }
+function syncManche(){ state.manche=parseInt(document.getElementById('mancheSelect').value);render();broadcast(); }
+
+// ===== TIMER =====
+const CIRC = 2*Math.PI*50;
+function toggleTimer(){ state.timerRunning?stopTimer():startTimer(); }
+function startTimer(){
+  if(state.timerRestant<=0) state.timerRestant=state.timerDuree;
+  state.timerRunning=true;
+  const btn=document.getElementById('playBtn');
+  if(btn){btn.textContent='⏸';btn.classList.remove('play');btn.style.background='#555';}
+  timerInterval=setInterval(()=>{
     state.timerRestant--;
     updateTimerUI();
-
-    // Tick son sur les 10 dernières secondes
-    if (state.timerRestant <= 10 && state.timerRestant > 0) {
-      playTick();
-      flashScreen();
-    }
-
-    if (state.timerRestant <= 0) {
-      stopTimer();
-      playFinSound();
-      triggerFlash();
-    }
-  }, 1000);
+    if(state.timerRestant<=10&&state.timerRestant>0) playTick();
+    if(state.timerRestant<=0){stopTimer();playFin();triggerFlash();}
+  },1000);
+}
+function stopTimer(){
+  state.timerRunning=false; clearInterval(timerInterval);
+  const btn=document.getElementById('playBtn');
+  if(btn){btn.textContent='▶';btn.classList.add('play');btn.style.background='';}
+}
+function resetTimer(){ stopTimer();state.timerRestant=state.timerDuree;updateTimerUI(); }
+function updateTimerUI(){
+  const t=state.timerRestant, pct=t/state.timerDuree, offset=CIRC*(1-pct);
+  const ring=document.getElementById('ringProgress');
+  const disp=document.getElementById('timerDisplay');
+  const mini=document.getElementById('timerMini');
+  if(ring){ring.style.strokeDashoffset=offset;ring.classList.toggle('urgent',t<=10);}
+  if(disp){disp.textContent=t;disp.classList.toggle('urgent',t<=10);}
+  if(mini){mini.textContent=t;mini.classList.toggle('urgent',t<=10);}
 }
 
-function stopTimer() {
-  state.timerRunning = false;
-  clearInterval(state.timerInterval);
-  document.getElementById('playBtn').textContent = '▶';
-  document.getElementById('playBtn').classList.add('play');
-  document.getElementById('playBtn').style.background = '';
+// ===== RÉGLAGES =====
+function changeTimer(d){
+  state.timerDuree=Math.max(10,Math.min(120,state.timerDuree+d));
+  if(!state.timerRunning) state.timerRestant=state.timerDuree;
+  document.getElementById('spinTimer').textContent=state.timerDuree+'s';
+  updateTimerUI(); broadcast();
+}
+function changeNbEquipes(d){
+  const n=Math.max(2,Math.min(8,state.nbEquipes+d));
+  if(n===state.nbEquipes) return;
+  state.nbEquipes=n;
+  while(state.scores.length<n) state.scores.push(0);
+  state.scores=state.scores.slice(0,n);
+  while(state.noms.length<n) state.noms.push('ÉQUIPE '+DEFAULT_NOMS[state.noms.length%DEFAULT_NOMS.length]);
+  state.noms=state.noms.slice(0,n);
+  document.getElementById('spinEquipes').textContent=n;
+  renderAll(); broadcast();
+}
+function changePasses(d){
+  state.passes=Math.max(0,Math.min(10,state.passes+d));
+  document.getElementById('spinPasses').textContent=state.passes===0?'∞':state.passes;
+  broadcast();
+}
+function appliquerNoms(){
+  for(let i=0;i<state.nbEquipes;i++){
+    const inp=document.getElementById(`inputNom${i}`);
+    if(inp) state.noms[i]=inp.value.trim().toUpperCase()||('ÉQUIPE '+(i+1));
+  }
+  render(); broadcast();
 }
 
-function resetTimer() {
-  stopTimer();
-  state.timerRestant = state.timerDuree;
+// ===== SON =====
+let audioCtx=null;
+function getAudio(){ if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx; }
+function playTick(){ try{const c=getAudio(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.setValueAtTime(0.3,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.08);o.start(c.currentTime);o.stop(c.currentTime+0.08);}catch(e){} }
+function playFin(){ try{const c=getAudio();[523,415,349].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=f;const t=c.currentTime+i*0.35;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.5,t+0.05);g.gain.exponentialRampToValueAtTime(0.001,t+0.5);o.start(t);o.stop(t+0.5);});}catch(e){} }
+function triggerFlash(){ const ov=document.getElementById('flashOverlay');let n=0;const iv=setInterval(()=>{ov.classList.toggle('active');if(++n>=6){clearInterval(iv);ov.classList.remove('active');}},150); }
+
+// ===== OVERLAY =====
+function afficherRecap(){
+  document.getElementById('mancheOverlayTitle').textContent='SCORES ACTUELS';
+  document.getElementById('mancheOverlaySubtitle').textContent=MANCHES[state.manche];
+  document.getElementById('recapScores').innerHTML=state.noms.map((n,i)=>`<div class="recap-item"><div class="r-name">${n}</div><div class="r-score" style="color:${TC[i%TC.length]}">${state.scores[i]}</div></div>`).join('');
+  document.getElementById('mancheOverlay').classList.add('visible');
+}
+function fermerOverlay(){ document.getElementById('mancheOverlay').classList.remove('visible'); }
+
+// ===== RENDER =====
+function renderProjection(){
+  document.getElementById('mancheBadge').textContent=MANCHES[state.manche];
+  const zone=document.getElementById('scoresZone');
+  const paires=[];
+  for(let i=0;i<state.nbEquipes;i+=2) paires.push([i,i+1]);
+  zone.innerHTML=paires.map(([a,b],pi)=>`
+    <div class="match-row">
+      <div class="team-block c${a%8}">
+        <div class="team-name" id="projNom${a}">${state.noms[a]||''}</div>
+        <div class="team-score" id="projScore${a}">${state.scores[a]}</div>
+        <div class="team-pts-label">points</div>
+      </div>
+      <div class="vs-divider">
+        <div class="vs-line"></div>
+        ${pi===0?`
+        <div class="sablier-ring">
+          <svg viewBox="0 0 120 120">
+            <circle class="ring-bg" cx="60" cy="60" r="50"/>
+            <circle class="ring-progress" id="ringProgress" cx="60" cy="60" r="50"/>
+          </svg>
+          <div class="timer-display" id="timerDisplay">${state.timerRestant}</div>
+        </div>
+        <div class="timer-controls">
+          <button class="t-btn play" id="playBtn" onclick="toggleTimer()">▶</button>
+          <button class="t-btn" onclick="resetTimer()">↺</button>
+        </div>
+        `:''}
+        <div class="vs-text">VS</div>
+        <div class="vs-line"></div>
+      </div>
+      <div class="team-block c${b%8}">
+        <div class="team-name" id="projNom${b}">${state.noms[b]||''}</div>
+        <div class="team-score" id="projScore${b}">${state.scores[b]}</div>
+        <div class="team-pts-label">points</div>
+      </div>
+    </div>`).join('');
   updateTimerUI();
 }
 
-function updateTimerUI() {
-  const t = state.timerRestant;
-  const pct = t / state.timerDuree;
-  const offset = CIRCONFERENCE * (1 - pct);
-
-  const ring = document.getElementById('ringProgress');
-  const display = document.getElementById('timerDisplay');
-
-  ring.style.strokeDashoffset = offset;
-  display.textContent = t;
-
-  const urgent = t <= 10;
-  ring.classList.toggle('urgent', urgent);
-  display.classList.toggle('urgent', urgent);
+function renderScoreurs(){
+  const grid=document.getElementById('scoreursGrid');
+  grid.innerHTML=state.noms.map((nom,i)=>`
+    <div class="scoreur-panel" style="background:linear-gradient(160deg,${TC[i%8]}11,${TC[i%8]}22);border:2px solid ${TC[i%8]}55">
+      <div class="scoreur-team-name" id="scoreurNom${i}" style="color:${TCL[i%8]}">${nom}</div>
+      <div class="scoreur-score-display" id="scoreurScore${i}" style="color:${TC[i%8]}">${state.scores[i]}</div>
+      <div class="scoreur-btns">
+        <button class="score-add-btn" onclick="addScore(${i},1)" style="background:${TC[i%8]}">+1</button>
+        <button class="score-add-btn" onclick="addScore(${i},2)" style="background:${TC[i%8]}">+2</button>
+        <button class="score-minus-btn" onclick="addScore(${i},-1)">−1 (annuler)</button>
+      </div>
+    </div>`).join('');
 }
 
-// ========== SON ==========
-let audioContext = null;
+function renderReglages(){
+  document.getElementById('spinTimer').textContent=state.timerDuree+'s';
+  document.getElementById('spinEquipes').textContent=state.nbEquipes;
+  document.getElementById('spinPasses').textContent=state.passes===0?'∞':state.passes;
+  const grid=document.getElementById('teamsNamesGrid');
+  grid.innerHTML=state.noms.map((nom,i)=>`
+    <div class="team-name-row">
+      <div class="team-name-label" style="color:${TC[i%8]}88">Équipe ${i+1}</div>
+      <input class="team-name-input" id="inputNom${i}" type="text" value="${nom}" maxlength="20"
+        style="border-color:${TC[i%8]}33"
+        onfocus="this.style.borderColor='${TC[i%8]}'"
+        onblur="this.style.borderColor='${TC[i%8]}33'">
+    </div>`).join('');
+}
 
-function getAudioCtx() {
-  if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+function render(){
+  document.getElementById('mancheBadge').textContent=MANCHES[state.manche];
+  document.getElementById('mancheSelect').value=state.manche;
+  for(let i=0;i<state.nbEquipes;i++){
+    const pn=document.getElementById(`projNom${i}`);
+    const ps=document.getElementById(`projScore${i}`);
+    const sn=document.getElementById(`scoreurNom${i}`);
+    const ss=document.getElementById(`scoreurScore${i}`);
+    if(pn) pn.textContent=state.noms[i];
+    if(ps) ps.textContent=state.scores[i];
+    if(sn) sn.textContent=state.noms[i];
+    if(ss) ss.textContent=state.scores[i];
   }
-  return audioContext;
 }
 
-function playTick() {
-  try {
-    const ctx = getAudioCtx();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = 880;
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.08);
-  } catch(e) {}
-}
+function renderAll(){ renderProjection(); renderScoreurs(); renderReglages(); }
 
-function playFinSound() {
-  try {
-    const ctx = getAudioCtx();
-    const freqs = [523, 415, 349];
-    freqs.forEach((f, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.frequency.value = f;
-      const t = ctx.currentTime + i * 0.35;
-      gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(0.5, t + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
-      osc.start(t);
-      osc.stop(t + 0.5);
-    });
-  } catch(e) {}
-}
-
-function flashScreen() {
-  // petit flash discret sur tick
-}
-
-function triggerFlash() {
-  const overlay = document.getElementById('flashOverlay');
-  let count = 0;
-  const interval = setInterval(() => {
-    overlay.classList.toggle('active');
-    count++;
-    if (count >= 6) {
-      clearInterval(interval);
-      overlay.classList.remove('active');
-    }
-  }, 150);
-}
-
-// ========== OVERLAY RECAP ==========
-function afficherRecap() {
-  document.getElementById('recapNomA').textContent = state.nomA;
-  document.getElementById('recapNomB').textContent = state.nomB;
-  document.getElementById('recapScoreA').textContent = state.scoreA;
-  document.getElementById('recapScoreB').textContent = state.scoreB;
-  document.getElementById('mancheOverlayTitle').textContent = 'SCORES ACTUELS';
-  document.getElementById('mancheOverlaySubtitle').textContent = MANCHES[state.manche];
-  document.getElementById('mancheOverlay').classList.add('visible');
-}
-
-function fermerOverlay() {
-  document.getElementById('mancheOverlay').classList.remove('visible');
-}
-
-// ========== RENDER ==========
-function render() {
-  // Projection
-  document.getElementById('projNomA').textContent = state.nomA;
-  document.getElementById('projNomB').textContent = state.nomB;
-  document.getElementById('projScoreA').textContent = state.scoreA;
-  document.getElementById('projScoreB').textContent = state.scoreB;
-  document.getElementById('mancheBadge').textContent = MANCHES[state.manche];
-
-  // Scoreurs
-  document.getElementById('scoreurNomA').textContent = state.nomA;
-  document.getElementById('scoreurNomB').textContent = state.nomB;
-  document.getElementById('scoreurScoreA').textContent = state.scoreA;
-  document.getElementById('scoreurScoreB').textContent = state.scoreB;
-}
-
-// ========== INIT ==========
-render();
+// ===== INIT =====
+renderAll();
 updateTimerUI();
-connectWS();
-
-// Débloquer l'AudioContext sur premier touch/click
-document.addEventListener('click', () => { try { getAudioCtx().resume(); } catch(e){} }, { once: true });
-document.addEventListener('touchstart', () => { try { getAudioCtx().resume(); } catch(e){} }, { once: true });
+demanderEtat();
+document.addEventListener('click',()=>{try{getAudio().resume();}catch(e){}},{once:true});
+document.addEventListener('touchstart',()=>{try{getAudio().resume();}catch(e){}},{once:true});
 </script>
 
 
-</body><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
-      div.grammarly-desktop-integration {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-        -moz-user-select: none;
-        -webkit-user-select: none;
-        -ms-user-select:none;
-        user-select:none;
-      }
-
-      div.grammarly-desktop-integration:before {
-        content: attr(data-content);
-      }
-    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>
+</body></html>
