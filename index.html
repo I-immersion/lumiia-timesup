@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Times Up – LUMIIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rouge: #E8003A;
+    --bleu: #0066FF;
+    --or: #FFD700;
+    --noir: #0A0A0A;
+    --gris: #1A1A1A;
+    --gris2: #2A2A2A;
+    --blanc: #F5F5F5;
+    --vert: #00C853;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--noir);
+    color: var(--blanc);
+    font-family: 'Barlow', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ========== TABS NAV ========== */
+  #tab-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    z-index: 100;
+    background: #000;
+    border-bottom: 2px solid #222;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 14px;
+    background: #111;
+    border: none;
+    color: #555;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-right: 1px solid #222;
+  }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn.active {
+    background: var(--gris2);
+    color: var(--or);
+    border-bottom: 3px solid var(--or);
+  }
+  .tab-btn:hover:not(.active) { background: #1a1a1a; color: #aaa; }
+
+  /* ========== PAGES ========== */
+  .page {
+    display: none;
+    position: absolute;
+    top: 52px; left: 0; right: 0; bottom: 0;
+    overflow-y: auto;
+  }
+  .page.active { display: flex; }
+
+  /* ========== PAGE PROJECTION (double équipe) ========== */
+  #page-projection {
+    flex-direction: column;
+    background: var(--noir);
+  }
+
+  /* Header projection */
+  .proj-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 24px 8px;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  .proj-logo {
+    height: 48px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+
+  .proj-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 6px;
+    color: var(--or);
+    text-shadow: 0 0 30px rgba(255,215,0,0.4);
+  }
+
+  .manche-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #555;
+    background: #111;
+    padding: 4px 14px;
+    border-radius: 20px;
+    border: 1px solid #333;
+  }
+
+  /* Zone scores double */
+  .scores-double {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    flex: 1;
+    gap: 0;
+    padding: 12px 20px 20px;
+    min-height: 0;
+  }
+
+  .team-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 24px;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .team-block.equipe-a {
+    background: linear-gradient(135deg, #1a0010 0%, #2d0020 50%, #1a0010 100%);
+    border: 2px solid rgba(232,0,58,0.4);
+    box-shadow: 0 0 40px rgba(232,0,58,0.15), inset 0 0 60px rgba(232,0,58,0.05);
+  }
+
+  .team-block.equipe-b {
+    background: linear-gradient(135deg, #001020 0%, #001e3d 50%, #001020 100%);
+    border: 2px solid rgba(0,102,255,0.4);
+    box-shadow: 0 0 40px rgba(0,102,255,0.15), inset 0 0 60px rgba(0,102,255,0.05);
+  }
+
+  .team-block::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.03) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .team-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.6rem, 3.5vw, 3rem);
+    letter-spacing: 4px;
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+
+  .equipe-a .team-name { color: #ff4d7a; }
+  .equipe-b .team-name { color: #4d9fff; }
+
+  .team-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 14vw, 12rem);
+    line-height: 0.9;
+    text-align: center;
+    transition: transform 0.15s ease, color 0.3s;
+  }
+
+  .equipe-a .team-score { color: var(--rouge); text-shadow: 0 0 60px rgba(232,0,58,0.5); }
+  .equipe-b .team-score { color: var(--bleu); text-shadow: 0 0 60px rgba(0,102,255,0.5); }
+
+  .team-score.bump {
+    animation: scoreBump 0.4s ease;
+  }
+  @keyframes scoreBump {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  .team-pts-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-top: 4px;
+  }
+
+  /* Séparateur central */
+  .vs-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    gap: 16px;
+  }
+
+  .vs-line {
+    width: 1px;
+    flex: 1;
+    background: linear-gradient(to bottom, transparent, #333, transparent);
+  }
+
+  .vs-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: #333;
+    letter-spacing: 2px;
+  }
+
+  /* Timer zone */
+  .timer-zone {
+    flex-shrink: 0;
+    padding: 8px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Sablier SVG */
+  .sablier-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+  }
+
+  .sablier-ring svg {
+    width: 120px;
+    height: 120px;
+    transform: rotate(-90deg);
+  }
+
+  .sablier-ring .ring-bg {
+    fill: none;
+    stroke: #222;
+    stroke-width: 8;
+  }
+
+  .sablier-ring .ring-progress {
+    fill: none;
+    stroke: var(--or);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 314;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear, stroke 0.3s;
+  }
+
+  .sablier-ring .ring-progress.urgent { stroke: var(--rouge); }
+
+  .timer-display {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    color: var(--blanc);
+    letter-spacing: 2px;
+  }
+
+  .timer-display.urgent { color: var(--rouge); }
+
+  /* Flash rouge */
+  .flash-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(232,0,58,0.35);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.1s;
+    z-index: 999;
+  }
+  .flash-overlay.active { opacity: 1; }
+
+  /* Overlay transition manche */
+  .manche-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+  }
+  .manche-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .manche-overlay h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    color: var(--or);
+    letter-spacing: 8px;
+    text-align: center;
+  }
+  .manche-overlay p {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.3rem;
+    color: #888;
+    letter-spacing: 3px;
+    margin-top: 12px;
+    text-align: center;
+  }
+  .manche-overlay .scores-recap {
+    display: flex;
+    gap: 60px;
+    margin-top: 40px;
+  }
+  .recap-item {
+    text-align: center;
+  }
+  .recap-item .r-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #666;
+  }
+  .recap-item .r-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+  }
+  .recap-item.rouge .r-score { color: var(--rouge); }
+  .recap-item.bleu .r-score { color: var(--bleu); }
+
+  .btn-continuer {
+    margin-top: 40px;
+    padding: 16px 48px;
+    background: var(--or);
+    color: #000;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-continuer:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(255,215,0,0.4); }
+
+  /* Contrôles projection */
+  .proj-controls {
+    flex-shrink: 0;
+    padding: 12px 24px 16px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-top: 1px solid #1a1a1a;
+  }
+
+  .ctrl-btn {
+    padding: 10px 22px;
+    border: 1px solid #333;
+    background: #111;
+    color: var(--blanc);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .ctrl-btn:hover { background: #222; border-color: #555; }
+  .ctrl-btn.primary { background: var(--or); color: #000; border-color: var(--or); }
+  .ctrl-btn.primary:hover { background: #e6c200; }
+  .ctrl-btn.danger { border-color: #500; color: #ff4444; }
+  .ctrl-btn.danger:hover { background: #1a0000; }
+
+  /* ========== PAGE SCOREURS ========== */
+  #page-scoreurs {
+    flex-direction: column;
+    background: var(--noir);
+    overflow-y: auto;
+  }
+
+  .scoreurs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 16px;
+    flex: 1;
+  }
+
+  .scoreur-panel {
+    border-radius: 14px;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .scoreur-panel.panel-a {
+    background: linear-gradient(160deg, #1a0010, #2d0020);
+    border: 2px solid rgba(232,0,58,0.5);
+  }
+
+  .scoreur-panel.panel-b {
+    background: linear-gradient(160deg, #001020, #001e3d);
+    border: 2px solid rgba(0,102,255,0.5);
+  }
+
+  .scoreur-team-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 4px;
+    text-align: center;
+  }
+  .panel-a .scoreur-team-name { color: #ff4d7a; }
+  .panel-b .scoreur-team-name { color: #4d9fff; }
+
+  .scoreur-score-display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    line-height: 1;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .panel-a .scoreur-score-display { color: var(--rouge); }
+  .panel-b .scoreur-score-display { color: var(--bleu); }
+  .scoreur-score-display.bump { animation: scoreBump 0.4s ease; }
+
+  .scoreur-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .score-add-btn {
+    padding: 16px 8px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.1s;
+    touch-action: manipulation;
+  }
+  .score-add-btn:active { transform: scale(0.94); opacity: 0.8; }
+
+  .panel-a .score-add-btn { background: var(--rouge); color: #fff; }
+  .panel-b .score-add-btn { background: var(--bleu); color: #fff; }
+
+  .score-minus-btn {
+    grid-column: 1 / -1;
+    padding: 10px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #666;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    touch-action: manipulation;
+  }
+  .score-minus-btn:active { background: #2a0a0a; color: #ff4444; }
+
+  /* Config noms */
+  .scoreurs-config {
+    padding: 12px 16px 16px;
+    border-top: 1px solid #1a1a1a;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .config-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #555;
+    flex-basis: 100%;
+  }
+
+  .name-input {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 14px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: var(--blanc);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .name-input:focus { border-color: var(--or); }
+
+  .name-input.input-a:focus { border-color: var(--rouge); }
+  .name-input.input-b:focus { border-color: var(--bleu); }
+
+  .apply-btn {
+    padding: 10px 20px;
+    background: var(--or);
+    color: #000;
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+  }
+  .apply-btn:hover { opacity: 0.85; }
+
+  /* Manche selector scoreurs */
+  .manche-selector {
+    padding: 10px 16px 0;
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    align-items: center;
+  }
+  .manche-selector label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #555;
+  }
+  .manche-selector select {
+    background: #111;
+    border: 1px solid #333;
+    color: var(--blanc);
+    padding: 6px 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+  }
+  .manche-selector select:focus { border-color: var(--or); }
+
+  .reset-scores-btn {
+    margin-left: auto;
+    padding: 6px 16px;
+    background: transparent;
+    border: 1px solid #400;
+    color: #933;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .reset-scores-btn:hover { background: #1a0000; color: #f44; border-color: #f44; }
+
+  /* Timer controls */
+  .timer-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 6px;
+  }
+
+  .t-btn {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    background: #111;
+    color: var(--blanc);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .t-btn:hover { background: #222; border-color: #555; }
+  .t-btn.play { background: var(--vert); border-color: var(--vert); color: #000; }
+  .t-btn.play:hover { background: #00e060; }
+  .t-btn.stop { background: #333; }
+
+  /* Tick sonore */
+  @keyframes tickPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+  .ring-progress.ticking { animation: none; }
+
+  /* Responsive tablette */
+  @media (max-width: 600px) {
+    .scoreurs-grid { grid-template-columns: 1fr; }
+    .score-add-btn { padding: 20px 8px; font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Flash overlay -->
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<!-- Overlay transition manche -->
+<div class="manche-overlay" id="mancheOverlay">
+  <h2 id="mancheOverlayTitle">FIN DE MANCHE</h2>
+  <p id="mancheOverlaySubtitle">Préparez-vous pour la suite</p>
+  <div class="scores-recap">
+    <div class="recap-item rouge">
+      <div class="r-name" id="recapNomA">ÉQUIPE A</div>
+      <div class="r-score" id="recapScoreA">0</div>
+    </div>
+    <div class="recap-item bleu">
+      <div class="r-name" id="recapNomB">ÉQUIPE B</div>
+      <div class="r-score" id="recapScoreB">0</div>
+    </div>
+  </div>
+  <button class="btn-continuer" onclick="fermerOverlay()">CONTINUER</button>
+</div>
+
+<!-- Navigation -->
+<nav id="tab-nav">
+  <button class="tab-btn active" onclick="showTab('projection')">🎬 Projection</button>
+  <button class="tab-btn" onclick="showTab('scoreurs')">✏️ Scoreurs</button>
+</nav>
+
+<!-- PAGE PROJECTION -->
+<div class="page active" id="page-projection">
+
+  <div class="proj-header">
+    <div class="proj-title">TIMES UP</div>
+    <div class="manche-badge" id="mancheBadge">MANCHE 1 — TOUT PERMIS</div>
+  </div>
+
+  <div class="scores-double">
+    <!-- Équipe A -->
+    <div class="team-block equipe-a">
+      <div class="team-name" id="projNomA">ÉQUIPE ROUGE</div>
+      <div class="team-score" id="projScoreA">0</div>
+      <div class="team-pts-label">points</div>
+    </div>
+
+    <!-- Divider + Timer -->
+    <div class="vs-divider">
+      <div class="vs-line"></div>
+      <div class="sablier-ring" id="sablierRing">
+        <svg viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="50"/>
+          <circle class="ring-progress" id="ringProgress" cx="60" cy="60" r="50"/>
+        </svg>
+        <div class="timer-display" id="timerDisplay">45</div>
+      </div>
+      <div class="timer-controls">
+        <button class="t-btn play" id="playBtn" onclick="toggleTimer()">▶</button>
+        <button class="t-btn stop" onclick="resetTimer()">↺</button>
+      </div>
+      <div class="vs-text">VS</div>
+      <div class="vs-line"></div>
+    </div>
+
+    <!-- Équipe B -->
+    <div class="team-block equipe-b">
+      <div class="team-name" id="projNomB">ÉQUIPE BLEUE</div>
+      <div class="team-score" id="projScoreB">0</div>
+      <div class="team-pts-label">points</div>
+    </div>
+  </div>
+
+  <div class="proj-controls">
+    <button class="ctrl-btn" onclick="changerManche(-1)">◀ Manche</button>
+    <button class="ctrl-btn" onclick="changerManche(1)">Manche ▶</button>
+    <button class="ctrl-btn primary" onclick="afficherRecap()">📊 Récap</button>
+    <button class="ctrl-btn danger" onclick="resetComplet()">⚠ Reset total</button>
+  </div>
+</div>
+
+<!-- PAGE SCOREURS -->
+<div class="page" id="page-scoreurs">
+
+  <div class="manche-selector">
+    <label>Manche :</label>
+    <select id="mancheSelect" onchange="syncManche()">
+      <option value="0">1 — Tout permis</option>
+      <option value="1">2 — Un mot + mimiques</option>
+      <option value="2">3 — Mime pur</option>
+    </select>
+    <button class="reset-scores-btn" onclick="resetScores()">Reset scores</button>
+  </div>
+
+  <div class="scoreurs-grid">
+    <!-- Panel Équipe A -->
+    <div class="scoreur-panel panel-a">
+      <div class="scoreur-team-name" id="scoreurNomA">ÉQUIPE ROUGE</div>
+      <div class="scoreur-score-display" id="scoreurScoreA">0</div>
+      <div class="scoreur-btns">
+        <button class="score-add-btn" onclick="addScore('a', 1)">+1</button>
+        <button class="score-add-btn" onclick="addScore('a', 2)">+2</button>
+        <button class="score-minus-btn" onclick="addScore('a', -1)">−1 (annuler)</button>
+      </div>
+    </div>
+
+    <!-- Panel Équipe B -->
+    <div class="scoreur-panel panel-b">
+      <div class="scoreur-team-name" id="scoreurNomB">ÉQUIPE BLEUE</div>
+      <div class="scoreur-score-display" id="scoreurScoreB">0</div>
+      <div class="scoreur-btns">
+        <button class="score-add-btn" onclick="addScore('b', 1)">+1</button>
+        <button class="score-add-btn" onclick="addScore('b', 2)">+2</button>
+        <button class="score-minus-btn" onclick="addScore('b', -1)">−1 (annuler)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scoreurs-config">
+    <div class="config-label">Noms des équipes</div>
+    <input class="name-input input-a" id="inputNomA" type="text" placeholder="Équipe Rouge" value="ÉQUIPE ROUGE" maxlength="20">
+    <input class="name-input input-b" id="inputNomB" type="text" placeholder="Équipe Bleue" value="ÉQUIPE BLEUE" maxlength="20">
+    <button class="apply-btn" onclick="appliquerNoms()">Appliquer</button>
+  </div>
+</div>
+
+<audio id="audioCtx"></audio>
+
+<script>
+// ========== STATE ==========
+const MANCHES = [
+  'MANCHE 1 — TOUT PERMIS',
+  'MANCHE 2 — UN MOT + MIMIQUES',
+  'MANCHE 3 — MIME PUR'
+];
+
+let state = {
+  scoreA: 0,
+  scoreB: 0,
+  nomA: 'ÉQUIPE ROUGE',
+  nomB: 'ÉQUIPE BLEUE',
+  manche: 0,
+  timerDuree: 45,
+  timerRestant: 45,
+  timerRunning: false,
+  timerInterval: null
+};
+
+// ========== TABS ==========
+function showTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ========== SCORES ==========
+function addScore(equipe, val) {
+  if (equipe === 'a') {
+    state.scoreA = Math.max(0, state.scoreA + val);
+    bumpElement('scoreurScoreA');
+    bumpElement('projScoreA');
+  } else {
+    state.scoreB = Math.max(0, state.scoreB + val);
+    bumpElement('scoreurScoreB');
+    bumpElement('projScoreB');
+  }
+  render();
+}
+
+function resetScores() {
+  if (!confirm('Remettre les deux scores à zéro ?')) return;
+  state.scoreA = 0;
+  state.scoreB = 0;
+  render();
+}
+
+function resetComplet() {
+  if (!confirm('Reset total : scores + manche + timer ?')) return;
+  state.scoreA = 0;
+  state.scoreB = 0;
+  state.manche = 0;
+  stopTimer();
+  state.timerRestant = state.timerDuree;
+  document.getElementById('mancheSelect').value = '0';
+  render();
+}
+
+function bumpElement(id) {
+  const el = document.getElementById(id);
+  el.classList.remove('bump');
+  void el.offsetWidth;
+  el.classList.add('bump');
+  setTimeout(() => el.classList.remove('bump'), 400);
+}
+
+// ========== NOMS ==========
+function appliquerNoms() {
+  const a = document.getElementById('inputNomA').value.trim().toUpperCase() || 'ÉQUIPE ROUGE';
+  const b = document.getElementById('inputNomB').value.trim().toUpperCase() || 'ÉQUIPE BLEUE';
+  state.nomA = a;
+  state.nomB = b;
+  render();
+}
+
+// ========== MANCHE ==========
+function changerManche(dir) {
+  state.manche = Math.max(0, Math.min(2, state.manche + dir));
+  document.getElementById('mancheSelect').value = state.manche;
+  render();
+}
+
+function syncManche() {
+  state.manche = parseInt(document.getElementById('mancheSelect').value);
+  render();
+}
+
+// ========== TIMER ==========
+const CIRCONFERENCE = 2 * Math.PI * 50; // ~314
+
+function toggleTimer() {
+  if (state.timerRunning) {
+    stopTimer();
+  } else {
+    startTimer();
+  }
+}
+
+function startTimer() {
+  if (state.timerRestant <= 0) state.timerRestant = state.timerDuree;
+  state.timerRunning = true;
+  document.getElementById('playBtn').textContent = '⏸';
+  document.getElementById('playBtn').classList.remove('play');
+  document.getElementById('playBtn').style.background = '#555';
+
+  state.timerInterval = setInterval(() => {
+    state.timerRestant--;
+    updateTimerUI();
+
+    // Tick son sur les 10 dernières secondes
+    if (state.timerRestant <= 10 && state.timerRestant > 0) {
+      playTick();
+      flashScreen();
+    }
+
+    if (state.timerRestant <= 0) {
+      stopTimer();
+      playFinSound();
+      triggerFlash();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  state.timerRunning = false;
+  clearInterval(state.timerInterval);
+  document.getElementById('playBtn').textContent = '▶';
+  document.getElementById('playBtn').classList.add('play');
+  document.getElementById('playBtn').style.background = '';
+}
+
+function resetTimer() {
+  stopTimer();
+  state.timerRestant = state.timerDuree;
+  updateTimerUI();
+}
+
+function updateTimerUI() {
+  const t = state.timerRestant;
+  const pct = t / state.timerDuree;
+  const offset = CIRCONFERENCE * (1 - pct);
+
+  const ring = document.getElementById('ringProgress');
+  const display = document.getElementById('timerDisplay');
+
+  ring.style.strokeDashoffset = offset;
+  display.textContent = t;
+
+  const urgent = t <= 10;
+  ring.classList.toggle('urgent', urgent);
+  display.classList.toggle('urgent', urgent);
+}
+
+// ========== SON ==========
+let audioContext = null;
+
+function getAudioCtx() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioContext;
+}
+
+function playTick() {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.08);
+  } catch(e) {}
+}
+
+function playFinSound() {
+  try {
+    const ctx = getAudioCtx();
+    const freqs = [523, 415, 349];
+    freqs.forEach((f, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = f;
+      const t = ctx.currentTime + i * 0.35;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.5, t + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      osc.start(t);
+      osc.stop(t + 0.5);
+    });
+  } catch(e) {}
+}
+
+function flashScreen() {
+  // petit flash discret sur tick
+}
+
+function triggerFlash() {
+  const overlay = document.getElementById('flashOverlay');
+  let count = 0;
+  const interval = setInterval(() => {
+    overlay.classList.toggle('active');
+    count++;
+    if (count >= 6) {
+      clearInterval(interval);
+      overlay.classList.remove('active');
+    }
+  }, 150);
+}
+
+// ========== OVERLAY RECAP ==========
+function afficherRecap() {
+  document.getElementById('recapNomA').textContent = state.nomA;
+  document.getElementById('recapNomB').textContent = state.nomB;
+  document.getElementById('recapScoreA').textContent = state.scoreA;
+  document.getElementById('recapScoreB').textContent = state.scoreB;
+  document.getElementById('mancheOverlayTitle').textContent = 'SCORES ACTUELS';
+  document.getElementById('mancheOverlaySubtitle').textContent = MANCHES[state.manche];
+  document.getElementById('mancheOverlay').classList.add('visible');
+}
+
+function fermerOverlay() {
+  document.getElementById('mancheOverlay').classList.remove('visible');
+}
+
+// ========== RENDER ==========
+function render() {
+  // Projection
+  document.getElementById('projNomA').textContent = state.nomA;
+  document.getElementById('projNomB').textContent = state.nomB;
+  document.getElementById('projScoreA').textContent = state.scoreA;
+  document.getElementById('projScoreB').textContent = state.scoreB;
+  document.getElementById('mancheBadge').textContent = MANCHES[state.manche];
+
+  // Scoreurs
+  document.getElementById('scoreurNomA').textContent = state.nomA;
+  document.getElementById('scoreurNomB').textContent = state.nomB;
+  document.getElementById('scoreurScoreA').textContent = state.scoreA;
+  document.getElementById('scoreurScoreB').textContent = state.scoreB;
+}
+
+// ========== INIT ==========
+render();
+updateTimerUI();
+
+// Débloquer l'AudioContext sur premier touch/click
+document.addEventListener('click', () => { try { getAudioCtx().resume(); } catch(e){} }, { once: true });
+document.addEventListener('touchstart', () => { try { getAudioCtx().resume(); } catch(e){} }, { once: true });
+</script>
+</body>
+</html>
