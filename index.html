@@ -657,6 +657,7 @@
   <div class="proj-header">
     <div class="proj-title">TIMES UP</div>
     <div class="manche-badge" id="mancheBadge">MANCHE 1 — TOUT PERMIS</div>
+    <div id="syncStatus" style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:2px;color:#E8003A;">● CONNEXION...</div>
   </div>
 
   <div class="scores-double">
@@ -749,6 +750,88 @@
 <audio id="audioCtx"></audio>
 
 <script>
+// ========== SYNC TEMPS RÉEL (WebSocket public) ==========
+// Utilise un canal partagé unique pour LUMIIA
+const CHANNEL = 'lumiia-timesup-2026-v1';
+let ws = null;
+let wsReady = false;
+let pendingBroadcast = null;
+
+function connectWS() {
+  try {
+    // PieSocket - WebSocket public gratuit, pas de compte requis
+    ws = new WebSocket(`wss://s14490.blr1.piesocket.com/v3/${CHANNEL}?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9f72bx&notify_self=1`);
+    ws.onopen = () => {
+      wsReady = true;
+      showSyncStatus('connected');
+      // Demander l'état aux autres appareils connectés
+      ws.send(JSON.stringify({ type: 'request_state', from: clientId }));
+    };
+    ws.onmessage = (evt) => {
+      try {
+        const msg = JSON.parse(evt.data);
+        // Ignorer nos propres messages
+        if (msg.from === clientId) return;
+
+        if (msg.type === 'state' || msg.type === 'state_response') {
+          state.scoreA = msg.scoreA ?? state.scoreA;
+          state.scoreB = msg.scoreB ?? state.scoreB;
+          state.nomA = msg.nomA ?? state.nomA;
+          state.nomB = msg.nomB ?? state.nomB;
+          state.manche = msg.manche ?? state.manche;
+          document.getElementById('mancheSelect').value = state.manche;
+          document.getElementById('inputNomA').value = state.nomA;
+          document.getElementById('inputNomB').value = state.nomB;
+          render();
+        }
+        // Si quelqu'un demande l'état, on répond
+        if (msg.type === 'request_state') {
+          setTimeout(() => broadcast('state_response'), 300);
+        }
+      } catch(e) {}
+    };
+    ws.onclose = () => {
+      wsReady = false;
+      showSyncStatus('disconnected');
+      setTimeout(connectWS, 3000);
+    };
+    ws.onerror = () => {
+      wsReady = false;
+      showSyncStatus('disconnected');
+    };
+  } catch(e) {
+    showSyncStatus('disconnected');
+  }
+}
+
+// ID unique pour cet appareil (évite d'écouter ses propres messages)
+const clientId = Math.random().toString(36).slice(2, 8);
+
+function broadcast(type = 'state') {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  ws.send(JSON.stringify({
+    type,
+    from: clientId,
+    scoreA: state.scoreA,
+    scoreB: state.scoreB,
+    nomA: state.nomA,
+    nomB: state.nomB,
+    manche: state.manche,
+  }));
+}
+
+function showSyncStatus(status) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  if (status === 'connected') {
+    el.textContent = '● EN LIGNE';
+    el.style.color = '#00C853';
+  } else {
+    el.textContent = '● HORS LIGNE';
+    el.style.color = '#E8003A';
+  }
+}
+
 // ========== STATE ==========
 const MANCHES = [
   'MANCHE 1 — TOUT PERMIS',
@@ -788,6 +871,7 @@ function addScore(equipe, val) {
     bumpElement('projScoreB');
   }
   render();
+  broadcast();
 }
 
 function resetScores() {
@@ -795,6 +879,7 @@ function resetScores() {
   state.scoreA = 0;
   state.scoreB = 0;
   render();
+  broadcast();
 }
 
 function resetComplet() {
@@ -806,6 +891,7 @@ function resetComplet() {
   state.timerRestant = state.timerDuree;
   document.getElementById('mancheSelect').value = '0';
   render();
+  broadcast();
 }
 
 function bumpElement(id) {
@@ -823,6 +909,7 @@ function appliquerNoms() {
   state.nomA = a;
   state.nomB = b;
   render();
+  broadcast();
 }
 
 // ========== MANCHE ==========
@@ -830,11 +917,13 @@ function changerManche(dir) {
   state.manche = Math.max(0, Math.min(2, state.manche + dir));
   document.getElementById('mancheSelect').value = state.manche;
   render();
+  broadcast();
 }
 
 function syncManche() {
   state.manche = parseInt(document.getElementById('mancheSelect').value);
   render();
+  broadcast();
 }
 
 // ========== TIMER ==========
@@ -999,6 +1088,7 @@ function render() {
 // ========== INIT ==========
 render();
 updateTimerUI();
+connectWS();
 
 // Débloquer l'AudioContext sur premier touch/click
 document.addEventListener('click', () => { try { getAudioCtx().resume(); } catch(e){} }, { once: true });
