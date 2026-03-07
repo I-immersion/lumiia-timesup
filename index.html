@@ -677,13 +677,19 @@ function bridgeConnect() {
 
 function bridgeSendState() {
   if (!bridgeConnected || !bridge || bridge.readyState !== WebSocket.OPEN) return;
-  bridge.send(JSON.stringify({
+  const payload = {
     type: 'state',
     manche: state.manche, timerRestant: state.timerRestant,
     timerRunning: state.timerRunning, timerDuree: state.timerDuree,
     pairActive: pairActive, nbEquipes: state.nbEquipes,
-    passes: state.passes, scores: [...state.scores], noms: [...state.noms],
-  }));
+    passes: state.passes,
+  };
+  // Scores et noms à plat pour Chataigne (score0, score1... nom0, nom1...)
+  for (let i = 0; i < 8; i++) {
+    payload['score' + i] = state.scores[i] ?? 0;
+    payload['nom' + i]   = state.noms[i]   ?? '';
+  }
+  bridge.send(JSON.stringify(payload));
 }
 
 function handleBridgeCmd(msg) {
