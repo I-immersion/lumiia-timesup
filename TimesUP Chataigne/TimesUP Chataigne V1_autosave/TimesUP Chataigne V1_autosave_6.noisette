@@ -1,0 +1,821 @@
+{
+  "metaData": {
+    "version": "1.10.2",
+    "versionNumber": 68098
+  },
+  "projectSettings": {
+    "containers": {
+      "dashboardSettings": {
+        "parameters": [
+          {
+            "value": "",
+            "controlAddress": "/showDashboardOnStartup",
+            "enabled": true
+          },
+          {
+            "value": true,
+            "controlAddress": "/enableDashboardServer"
+          },
+          {
+            "value": 9999,
+            "hexMode": false,
+            "controlAddress": "/serverPort"
+          }
+        ]
+      },
+      "customDefinitions": {
+      }
+    }
+  },
+  "dashboardManager": {
+    "parameters": [
+      {
+        "value": true,
+        "controlAddress": "/editMode"
+      }
+    ],
+    "items": [
+      {
+        "niceName": "Dashboard",
+        "type": "BaseItem",
+        "itemManager": {
+          "parameters": [
+            {
+              "value": [
+                1200.0,
+                800.0
+              ],
+              "controlAddress": "/canvasSize",
+              "enabled": false
+            }
+          ],
+          "items": [
+            {
+              "parameters": [
+                {
+                  "value": [
+                    -229.0,
+                    35.0
+                  ],
+                  "controlAddress": "/viewUIPosition"
+                },
+                {
+                  "value": [
+                    200.0,
+                    40.0
+                  ],
+                  "controlAddress": "/viewUISize"
+                },
+                {
+                  "value": "/modules/webSocketClient/values/timerRunning",
+                  "controlAddress": "/target"
+                },
+                {
+                  "value": "",
+                  "controlAddress": "/toggleImage",
+                  "enabled": false
+                }
+              ],
+              "niceName": "Item",
+              "hideInEditor": true,
+              "type": "DashboardParameterItem",
+              "ghostAddress": "/modules/webSocketClient/values/timerRunning",
+              "controllable": "/modules/webSocketClient/values/timerRunning"
+            },
+            {
+              "parameters": [
+                {
+                  "value": [
+                    -229.0,
+                    -203.0
+                  ],
+                  "controlAddress": "/viewUIPosition"
+                },
+                {
+                  "value": [
+                    200.0,
+                    40.0
+                  ],
+                  "controlAddress": "/viewUISize"
+                },
+                {
+                  "value": "/modules/webSocketClient/values/timerRestant",
+                  "controlAddress": "/target"
+                },
+                {
+                  "value": "",
+                  "controlAddress": "/toggleImage",
+                  "enabled": false
+                }
+              ],
+              "niceName": "Item 1",
+              "hideInEditor": true,
+              "type": "DashboardParameterItem",
+              "ghostAddress": "/modules/webSocketClient/values/timerRestant",
+              "controllable": "/modules/webSocketClient/values/timerRestant"
+            },
+            {
+              "parameters": [
+                {
+                  "value": [
+                    -229.0,
+                    -153.0
+                  ],
+                  "controlAddress": "/viewUIPosition"
+                },
+                {
+                  "value": [
+                    200.0,
+                    40.0
+                  ],
+                  "controlAddress": "/viewUISize"
+                },
+                {
+                  "value": "/modules/webSocketClient/values/manche",
+                  "controlAddress": "/target"
+                },
+                {
+                  "value": "",
+                  "controlAddress": "/toggleImage",
+                  "enabled": false
+                }
+              ],
+              "niceName": "Item 2",
+              "hideInEditor": true,
+              "type": "DashboardParameterItem",
+              "ghostAddress": "/modules/webSocketClient/values/manche",
+              "controllable": "/modules/webSocketClient/values/manche"
+            },
+            {
+              "parameters": [
+                {
+                  "value": [
+                    3.0,
+                    -253.0
+                  ],
+                  "controlAddress": "/viewUIPosition"
+                },
+                {
+                  "value": [
+                    200.0,
+                    40.0
+                  ],
+                  "controlAddress": "/viewUISize"
+                },
+                {
+                  "value": "/modules/webSocketClient/values/timerDuree",
+                  "controlAddress": "/target"
+                },
+                {
+                  "value": "",
+                  "controlAddress": "/toggleImage",
+                  "enabled": false
+                }
+              ],
+              "niceName": "Item 4",
+              "hideInEditor": true,
+              "type": "DashboardParameterItem",
+              "ghostAddress": "/modules/webSocketClient/values/timerDuree",
+              "controllable": "/modules/webSocketClient/values/timerDuree"
+            },
+            {
+              "parameters": [
+                {
+                  "value": [
+                    -229.0,
+                    -253.0
+                  ],
+                  "controlAddress": "/viewUIPosition"
+                },
+                {
+                  "value": [
+                    200.0,
+                    40.0
+                  ],
+                  "controlAddress": "/viewUISize"
+                },
+                {
+                  "value": "/modules/webSocketClient/values/nbEquipes",
+                  "controlAddress": "/target"
+                },
+                {
+                  "value": "",
+                  "controlAddress": "/toggleImage",
+                  "enabled": false
+                }
+              ],
+              "niceName": "Item 5",
+              "hideInEditor": true,
+              "type": "DashboardParameterItem",
+              "ghostAddress": "/modules/webSocketClient/values/nbEquipes",
+              "controllable": "/modules/webSocketClient/values/nbEquipes"
+            },
+            {
+              "parameters": [
+                {
+                  "value": [
+                    -166.0,
+                    163.0
+                  ],
+                  "controlAddress": "/viewUIPosition"
+                },
+                {
+                  "value": [
+                    200.0,
+                    40.0
+                  ],
+                  "controlAddress": "/viewUISize"
+                },
+                {
+                  "value": "/modules/webSocketClient/commandTester/trigger",
+                  "controlAddress": "/target"
+                },
+                {
+                  "value": "",
+                  "controlAddress": "/customImage",
+                  "enabled": false
+                }
+              ],
+              "niceName": "Item 3",
+              "hideInEditor": true,
+              "type": "DashboardTriggerItem",
+              "ghostAddress": "/modules/webSocketClient/commandTester/trigger",
+              "controllable": "/modules/webSocketClient/commandTester/trigger"
+            }
+          ],
+          "viewOffset": [
+            0,
+            0
+          ],
+          "viewZoom": 1.0
+        },
+        "editing": true
+      }
+    ],
+    "viewOffset": [
+      0,
+      0
+    ],
+    "viewZoom": 1.0
+  },
+  "parrots": {
+    "viewOffset": [
+      0,
+      0
+    ],
+    "viewZoom": 1.0
+  },
+  "layout": {
+    "mainLayout": {
+      "type": 1,
+      "width": 1171,
+      "height": 984,
+      "direction": 2,
+      "shifters": [
+        {
+          "type": 1,
+          "width": 1171,
+          "height": 984,
+          "direction": 2,
+          "shifters": [
+            {
+              "type": 1,
+              "width": 1171,
+              "height": 801,
+              "direction": 1,
+              "shifters": [
+                {
+                  "type": 1,
+                  "width": 307,
+                  "height": 801,
+                  "direction": 2,
+                  "shifters": [
+                    {
+                      "type": 0,
+                      "width": 307,
+                      "height": 408,
+                      "currentContent": "Modules",
+                      "tabs": [
+                        {
+                          "name": "Modules"
+                        }
+                      ]
+                    },
+                    {
+                      "type": 0,
+                      "width": 307,
+                      "height": 386,
+                      "currentContent": "Custom Variables",
+                      "tabs": [
+                        {
+                          "name": "Custom Variables"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": 0,
+                  "width": 329,
+                  "height": 801,
+                  "currentContent": "Dashboard",
+                  "tabs": [
+                    {
+                      "name": "State Machine"
+                    },
+                    {
+                      "name": "Dashboard"
+                    },
+                    {
+                      "name": "Module Router"
+                    },
+                    {
+                      "name": "Morpher"
+                    }
+                  ]
+                },
+                {
+                  "type": 0,
+                  "width": 523,
+                  "height": 801,
+                  "currentContent": "Inspector",
+                  "tabs": [
+                    {
+                      "name": "Inspector"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": 1,
+              "width": 1171,
+              "height": 176,
+              "direction": 1,
+              "shifters": [
+                {
+                  "type": 0,
+                  "width": 178,
+                  "height": 176,
+                  "currentContent": "Sequences",
+                  "tabs": [
+                    {
+                      "name": "Sequences"
+                    }
+                  ]
+                },
+                {
+                  "type": 0,
+                  "width": 507,
+                  "height": 176,
+                  "currentContent": "Sequence Editor",
+                  "tabs": [
+                    {
+                      "name": "Sequence Editor"
+                    }
+                  ]
+                },
+                {
+                  "type": 0,
+                  "width": 474,
+                  "height": 176,
+                  "currentContent": "Logger",
+                  "tabs": [
+                    {
+                      "name": "Help"
+                    },
+                    {
+                      "name": "Logger"
+                    },
+                    {
+                      "name": "Warnings"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "windows": null
+  },
+  "modules": {
+    "items": [
+      {
+        "niceName": "WebSocket Client",
+        "type": "WebSocket Client",
+        "scripts": {
+          "viewOffset": [
+            0,
+            0
+          ],
+          "viewZoom": 1.0
+        },
+        "params": {
+          "parameters": [
+            {
+              "value": "JSON",
+              "controlAddress": "/protocol"
+            },
+            {
+              "value": "",
+              "controlAddress": "/messageStructure"
+            },
+            {
+              "value": "|",
+              "controlAddress": "/customSeparator"
+            },
+            {
+              "value": true,
+              "controlAddress": "/firstValueIsTheName"
+            },
+            {
+              "value": "127.0.0.1:8765",
+              "controlAddress": "/serverPath"
+            }
+          ],
+          "containers": {
+            "pass_through": {
+            }
+          }
+        },
+        "templates": {
+          "viewOffset": [
+            0,
+            0
+          ],
+          "viewZoom": 1.0
+        },
+        "values": {
+          "parameters": [
+            {
+              "value": "state",
+              "controlAddress": "/type",
+              "type": "String",
+              "niceName": "type",
+              "customizable": true,
+              "removable": true,
+              "description": "type",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 2,
+              "hexMode": false,
+              "controlAddress": "/manche",
+              "type": "Integer",
+              "niceName": "manche",
+              "customizable": true,
+              "removable": true,
+              "description": "manche",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 40,
+              "hexMode": false,
+              "controlAddress": "/timerRestant",
+              "type": "Integer",
+              "niceName": "timerRestant",
+              "customizable": true,
+              "removable": true,
+              "description": "timerRestant",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": false,
+              "minValue": 0,
+              "maxValue": 1,
+              "default": false,
+              "controlAddress": "/timerRunning",
+              "type": "Boolean",
+              "niceName": "timerRunning",
+              "customizable": true,
+              "removable": true,
+              "description": "timerRunning",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 40,
+              "hexMode": false,
+              "controlAddress": "/timerDuree",
+              "type": "Integer",
+              "niceName": "timerDuree",
+              "customizable": true,
+              "removable": true,
+              "description": "timerDuree",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 0,
+              "hexMode": false,
+              "controlAddress": "/pairActive",
+              "type": "Integer",
+              "niceName": "pairActive",
+              "customizable": true,
+              "removable": true,
+              "description": "pairActive",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 4,
+              "hexMode": false,
+              "controlAddress": "/nbEquipes",
+              "type": "Integer",
+              "niceName": "nbEquipes",
+              "customizable": true,
+              "removable": true,
+              "description": "nbEquipes",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 3,
+              "hexMode": false,
+              "controlAddress": "/passes",
+              "type": "Integer",
+              "niceName": "passes",
+              "customizable": true,
+              "removable": true,
+              "description": "passes",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 20,
+              "hexMode": false,
+              "controlAddress": "/score0",
+              "type": "Integer",
+              "niceName": "score0",
+              "customizable": true,
+              "removable": true,
+              "description": "score0",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": "TTTTT",
+              "controlAddress": "/nom0",
+              "type": "String",
+              "niceName": "nom0",
+              "customizable": true,
+              "removable": true,
+              "description": "nom0",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 12,
+              "hexMode": false,
+              "controlAddress": "/score1",
+              "type": "Integer",
+              "niceName": "score1",
+              "customizable": true,
+              "removable": true,
+              "description": "score1",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": "\u00c9QUIPE T",
+              "controlAddress": "/nom1",
+              "type": "String",
+              "niceName": "nom1",
+              "customizable": true,
+              "removable": true,
+              "description": "nom1",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 0,
+              "hexMode": false,
+              "controlAddress": "/score2",
+              "type": "Integer",
+              "niceName": "score2",
+              "customizable": true,
+              "removable": true,
+              "description": "score2",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": "LES BANANES BLEUES E",
+              "controlAddress": "/nom2",
+              "type": "String",
+              "niceName": "nom2",
+              "customizable": true,
+              "removable": true,
+              "description": "nom2",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 0,
+              "hexMode": false,
+              "controlAddress": "/score3",
+              "type": "Integer",
+              "niceName": "score3",
+              "customizable": true,
+              "removable": true,
+              "description": "score3",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": "\u00c9QUIPE Y",
+              "controlAddress": "/nom3",
+              "type": "String",
+              "niceName": "nom3",
+              "customizable": true,
+              "removable": true,
+              "description": "nom3",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 0,
+              "hexMode": false,
+              "controlAddress": "/score4",
+              "type": "Integer",
+              "niceName": "score4",
+              "customizable": true,
+              "removable": true,
+              "description": "score4",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": "",
+              "controlAddress": "/nom4",
+              "type": "String",
+              "niceName": "nom4",
+              "customizable": true,
+              "removable": true,
+              "description": "nom4",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 0,
+              "hexMode": false,
+              "controlAddress": "/score5",
+              "type": "Integer",
+              "niceName": "score5",
+              "customizable": true,
+              "removable": true,
+              "description": "score5",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": "",
+              "controlAddress": "/nom5",
+              "type": "String",
+              "niceName": "nom5",
+              "customizable": true,
+              "removable": true,
+              "description": "nom5",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 0,
+              "hexMode": false,
+              "controlAddress": "/score6",
+              "type": "Integer",
+              "niceName": "score6",
+              "customizable": true,
+              "removable": true,
+              "description": "score6",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": "",
+              "controlAddress": "/nom6",
+              "type": "String",
+              "niceName": "nom6",
+              "customizable": true,
+              "removable": true,
+              "description": "nom6",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": 0,
+              "hexMode": false,
+              "controlAddress": "/score7",
+              "type": "Integer",
+              "niceName": "score7",
+              "customizable": true,
+              "removable": true,
+              "description": "score7",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            },
+            {
+              "value": "",
+              "controlAddress": "/nom7",
+              "type": "String",
+              "niceName": "nom7",
+              "customizable": true,
+              "removable": true,
+              "description": "nom7",
+              "hideInEditor": false,
+              "feedbackOnly": false
+            }
+          ],
+          "containers": {
+            "0": {
+              "owned": true,
+              "niceName": "0"
+            },
+            "1": {
+              "owned": true,
+              "niceName": "1"
+            },
+            "2": {
+              "owned": true,
+              "niceName": "2"
+            },
+            "3": {
+              "owned": true,
+              "niceName": "3"
+            },
+            "4": {
+              "owned": true,
+              "niceName": "4"
+            },
+            "5": {
+              "owned": true,
+              "niceName": "5"
+            },
+            "6": {
+              "owned": true,
+              "niceName": "6"
+            },
+            "7": {
+              "owned": true,
+              "niceName": "7"
+            }
+          }
+        }
+      }
+    ],
+    "viewOffset": [
+      0,
+      0
+    ],
+    "viewZoom": 1.0
+  },
+  "customVariables": {
+    "viewOffset": [
+      0,
+      0
+    ],
+    "viewZoom": 1.0
+  },
+  "states": {
+    "viewOffset": [
+      0,
+      0
+    ],
+    "viewZoom": 1.0,
+    "transitions": {
+      "hideInEditor": true,
+      "viewOffset": [
+        0,
+        0
+      ],
+      "viewZoom": 1.0
+    },
+    "comments": {
+      "hideInEditor": true,
+      "viewOffset": [
+        0,
+        0
+      ],
+      "viewZoom": 1.0
+    }
+  },
+  "sequences": {
+    "viewOffset": [
+      0,
+      0
+    ],
+    "viewZoom": 1.0
+  },
+  "routers": {
+    "viewOffset": [
+      0,
+      0
+    ],
+    "viewZoom": 1.0
+  }
+}
